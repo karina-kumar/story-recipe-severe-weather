@@ -2,8 +2,7 @@
 title: "About"
 ---
 
-About this site
+## Project Questions
 
-```{r}
-1 + 1
-```
+- What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?
+- 

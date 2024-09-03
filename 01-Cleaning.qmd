@@ -1,0 +1,159 @@
+---
+title: "01-Cleaning"
+---
+### Setup
+Import Libraries:
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+```
+
+
+### Import the Storm Data
+
+```{r import}
+df <- read_csv(c(
+  "data-raw/StormEvents_details-ftp_v1.0_d2000_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2001_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2002_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2003_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2004_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2005_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2006_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2007_c20240216.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2008_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2009_c20231116.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2010_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2011_c20230417.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2012_c20221216.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2013_c20230118.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2014_c20231116.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2015_c20220425.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2016_c20220719.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2017_c20230317.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2018_c20230616.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2019_c20240117.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2020_c20231217.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2021_c20231217.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2022_c20240216.csv",
+  "data-raw/StormEvents_details-ftp_v1.0_d2023_c20240216.csv"
+  ))
+
+df |> glimpse()
+```
+
+## Narrow Results 
+
+I am only interested in storms in Texas for now. So let's filter for Texas
+
+```{r texas}
+texas <- df |> filter( STATE == "TEXAS")
+
+texas |> glimpse()
+```
+## Select Columns 
+
+I am going to select the columns I want to work with. 
+
+```{r select}
+storms <- texas |> select(
+  EVENT_TYPE,
+  BEGIN_DATE_TIME,
+  END_DATE_TIME,
+  YEAR,
+  INJURIES_DIRECT,
+  INJURIES_INDIRECT,
+  DEATHS_DIRECT,
+  DEATHS_INDIRECT,
+  DAMAGE_PROPERTY,
+  DAMAGE_CROPS,
+  CZ_TYPE,
+  CZ_FIPS,
+  CZ_NAME
+  )
+
+storms |> glimpse()
+```
+
+## Change types for some columns
+
+First, I am making the damage columns become numbers I can compare. First, I am separating the unit (k,m,b) from the number. 
+
+```{r separate-col}
+separate_col_damage <- storms |> mutate(
+  number1 = str_sub(DAMAGE_PROPERTY, end = -2),
+  unit1 = str_sub(DAMAGE_PROPERTY, -1:-1),
+  number2 = str_sub(DAMAGE_CROPS, end = -2),
+  unit2 = str_sub(DAMAGE_CROPS, -1:-1)
+)
+
+separate_col_damage
+
+```
+
+Next, I am making the number columns numerals.  
+
+```{r col-nums}
+damage_col_num <- separate_col_damage |> mutate(
+  number1 = as.numeric(number1),
+  number2 = as.numeric(number2))
+  
+damage_col_num
+  
+```
+
+Finally, I am using the units to multiple the number col and make a damage col with the actual values. 
+
+```{r damage-col}
+damage_col <- damage_col_num |> mutate(
+  damage_val_prop = if_else(unit1 == "K", number1 * 1000, if_else(unit1 == "M", number1 * 1000000, if_else(unit1 == "B", number1 * 1000000000, number1 ))),
+  damage_val_crop = if_else(unit2 == "K", number2 * 1000, if_else(unit2 == "M", number2 * 1000000, if_else(unit2 == "B", number2 * 1000000000, number1 )))
+)
+
+damage_col |> select(
+  DAMAGE_PROPERTY,
+  damage_val_prop,
+  DAMAGE_CROPS,
+  damage_val_crop
+)
+```
+
+Now, I am changing the date into a date type. 
+
+```{r date}
+date_storm <- damage_col |> mutate(
+  begin_date = dmy(paste(substring(BEGIN_DATE_TIME, 0, 7), YEAR, sep = '')),
+  end_date = dmy(paste(substring(END_DATE_TIME, 0, 7), YEAR, sep = '')))
+
+date_storm |> glimpse()
+```
+
+## Select important columns
+
+Finally I am going to get rid of the columns I created that I don't need anymore.
+
+```{r select2}
+clean_storm <- date_storm |> select(
+  -BEGIN_DATE_TIME,
+  -END_DATE_TIME,
+  -YEAR,
+  -number1,
+  -unit1,
+  -number2,
+  -unit2,
+  -DAMAGE_PROPERTY,
+  -DAMAGE_CROPS
+) 
+
+clean_storm |> glimpse()
+```
+
+## Export
+
+```{r export}
+clean_storm |> write_rds("data-processed/01-storm-data.rds")
+```
+```
+

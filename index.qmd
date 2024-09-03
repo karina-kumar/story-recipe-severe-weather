@@ -1,11 +1,8 @@
 ---
-title: "story-recipe-severe-weather"
+title: "Severe Weather and Damage Trends in Texas"
 ---
 
-This is a Quarto website.
+This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-```{r}
-1 + 1
-```
+
