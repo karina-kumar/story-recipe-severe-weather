@@ -1,6 +1,7 @@
 project:
   type: website
-
+  output-dir: docs
+  
 website:
   title: "Story Recipe: Severe Weather Damage in Texas"
   navbar:
@@ -19,5 +20,6 @@ format:
     css: styles.css
     toc: true
 
+df-print: paged
 
 
