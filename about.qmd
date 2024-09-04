@@ -4,5 +4,9 @@ title: "About"
 
 ## Project Questions
 
+Statewide Questions
+- Which storm types cause the most damage?
+- Where are the most damaging storms?
+- What year had the most damages?
+- How have the damages from storm events changed over time?
 - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?
-- 

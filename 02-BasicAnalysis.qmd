@@ -1,0 +1,109 @@
+---
+title: "Statewide Analysis"
+---
+
+## Setup
+
+```{r setup}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+```
+
+
+## Read in Clean Data
+
+```{r read}
+df <- read_rds("data-processed/01-storm-data.rds")
+
+df |> glimpse()
+
+```
+
+# Answering Questions
+
+## Which storm types cause the most damage?
+
+```{r filter-property}
+#filter for only events that have damage values for property
+damages_property <- df |> filter((!is.na(damage_val_prop)))
+
+damages_property
+```
+
+```{r most-damage-prop}
+#now groupby event type and sum up damages
+most_damage_property <- damages_property |> group_by(EVENT_TYPE) |> 
+  summarize(total_damage_property = sum(damage_val_prop)) |> 
+  arrange(total_damage_property |> desc())
+
+most_damage_property
+```
+
+Flash Floods caused the most damage to property in Texas since 2000, totaling over $48 billion in damage. Hail was the second most damaging event type with $11.8 billion in damage. 
+
+```{r filter-crop}
+damages_crops <- df |> filter((!is.na(damage_val_crop)))
+
+damages_crops
+```
+
+
+```{r most-damage-crop}
+most_damage_crop <- damages_crops |> group_by(EVENT_TYPE) |> 
+  summarize(total_damage_crop = sum(damage_val_crop)) |> 
+  arrange(total_damage_crop |> desc())
+
+most_damage_crop
+```
+
+Droughts caused the most damage to crops in Texas out of all severe weather events with $9.9 billion of damage.
+
+## Where did the most damaging storms occur?
+
+```{r sort-prop}
+sorted_damages_prop <- damages_property |> arrange(damage_val_prop |> desc())
+
+sorted_damages_prop
+```
+
+```{r sort-crop}
+sorted_damages_crop <- damages_crops |> arrange(damage_val_crop |> desc())
+
+sorted_damages_crop
+```
+
+## What year had the most damages?
+
+```{r most-year}
+yr_damage_prop <- damages_property |> group_by(year(begin_date)) |> 
+  summarize(total_damage_prop = sum(damage_val_prop)) |> 
+  arrange(total_damage_prop |> desc())
+
+yr_damage_crop <- damages_crops |> group_by(year(begin_date)) |> 
+  summarize(total_damage_crop = sum(damage_val_crop)) |> 
+  arrange(total_damage_crop |> desc())
+
+yr_damage_prop
+yr_damage_crop
+```
+
+## How have the damages from storm events changed over time?
+
+```{r plot-prop}
+ggplot(
+  damages_property,
+  aes(x = begin_date, y = damage_val_prop)
+) +
+  geom_point()
+```
+
+
+```{r plot-crop}
+ggplot(
+  damages_crops,
+  aes(x = begin_date, y = damage_val_crop)
+) +
+  geom_point()
+```
+

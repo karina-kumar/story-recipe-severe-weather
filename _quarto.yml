@@ -8,7 +8,10 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      - 01-Cleaning.qmd
+      - href: 01-Cleaning.qmd
+        text: Cleaning
+      - href: 02-BasicAnalysis.qmd
+        text: Statewide Analysis
 
 format:
   html:
