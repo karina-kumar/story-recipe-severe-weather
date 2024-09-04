@@ -67,28 +67,28 @@
     "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
     "title": "Statewide Analysis",
     "section": "Which storm types cause the most damage?",
-    "text": "Which storm types cause the most damage?\n\n#filter for only events that have damage values for property\ndamages_property &lt;- df |&gt; filter((!is.na(damage_val_prop)))\n\ndamages_property\n\n\n\n  \n\n\n\n\n#now groupby event type and sum up damages\nmost_damage_property &lt;- damages_property |&gt; group_by(EVENT_TYPE) |&gt; \n  summarize(total_damage_property = sum(damage_val_prop)) |&gt; \n  arrange(total_damage_property |&gt; desc())\n\nmost_damage_property\n\n\n\n  \n\n\n\nFlash Floods caused the most damage to property in Texas since 2000, totaling over $48 billion in damage. Hail was the second most damaging event type with $11.8 billion in damage.\n\ndamages_crops &lt;- df |&gt; filter((!is.na(damage_val_crop)))\n\ndamages_crops\n\n\n\n  \n\n\n\n\nmost_damage_crop &lt;- damages_crops |&gt; group_by(EVENT_TYPE) |&gt; \n  summarize(total_damage_crop = sum(damage_val_crop)) |&gt; \n  arrange(total_damage_crop |&gt; desc())\n\nmost_damage_crop\n\n\n\n  \n\n\n\nDroughts caused the most damage to crops in Texas out of all severe weather events with $9.9 billion of damage."
+    "text": "Which storm types cause the most damage?\n\n#now groupby event type and sum up damages\nmost_damage &lt;- df |&gt; group_by(EVENT_TYPE) |&gt; \n  summarize(total_damage_property = sum(damage_val_prop, na.rm = TRUE),\n            total_damage_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damage_property |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\nFlash Floods caused the most damage to property in Texas since 2000, totaling over $48 billion in damage. Hail was the second most damaging event type with $11.8 billion in damage.\n\nmost_damage |&gt; arrange(total_damage_crop |&gt; desc())\n\n\n\n  \n\n\n\nDroughts caused the most damage to crops in Texas out of all severe weather events with $9.9 billion of damage."
   },
   {
     "objectID": "02-BasicAnalysis.html#where-did-the-most-damaging-storms-occur",
     "href": "02-BasicAnalysis.html#where-did-the-most-damaging-storms-occur",
     "title": "Statewide Analysis",
     "section": "Where did the most damaging storms occur?",
-    "text": "Where did the most damaging storms occur?\n\nsorted_damages_prop &lt;- damages_property |&gt; arrange(damage_val_prop |&gt; desc())\n\nsorted_damages_prop\n\n\n\n  \n\n\n\n\nsorted_damages_crop &lt;- damages_crops |&gt; arrange(damage_val_crop |&gt; desc())\n\nsorted_damages_crop"
+    "text": "Where did the most damaging storms occur?\n\nsorted_damages_prop &lt;- df |&gt; arrange(damage_val_prop |&gt; desc())\n\nsorted_damages_prop\n\n\n\n  \n\n\n\n\nsorted_damages_crop &lt;- df |&gt; arrange(damage_val_crop |&gt; desc())\n\nsorted_damages_crop"
   },
   {
     "objectID": "02-BasicAnalysis.html#what-year-had-the-most-damages",
     "href": "02-BasicAnalysis.html#what-year-had-the-most-damages",
     "title": "Statewide Analysis",
     "section": "What year had the most damages?",
-    "text": "What year had the most damages?\n\nyr_damage_prop &lt;- damages_property |&gt; group_by(year(begin_date)) |&gt; \n  summarize(total_damage_prop = sum(damage_val_prop)) |&gt; \n  arrange(total_damage_prop |&gt; desc())\n\nyr_damage_crop &lt;- damages_crops |&gt; group_by(year(begin_date)) |&gt; \n  summarize(total_damage_crop = sum(damage_val_crop)) |&gt; \n  arrange(total_damage_crop |&gt; desc())\n\nyr_damage_prop\n\n\n\n  \n\n\nyr_damage_crop"
+    "text": "What year had the most damages?\n\nyr_damage_prop &lt;- df |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damage_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damage_prop |&gt; desc())\n\nyr_damage_crop &lt;- df |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damage_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damage_crop |&gt; desc())\n\nyr_damage_prop\n\n\n\n  \n\n\nyr_damage_crop"
   },
   {
     "objectID": "02-BasicAnalysis.html#how-have-the-damages-from-storm-events-changed-over-time",
     "href": "02-BasicAnalysis.html#how-have-the-damages-from-storm-events-changed-over-time",
     "title": "Statewide Analysis",
     "section": "How have the damages from storm events changed over time?",
-    "text": "How have the damages from storm events changed over time?\n\nggplot(\n  damages_property,\n  aes(x = begin_date, y = damage_val_prop)\n) +\n  geom_point()\n\n\n\n\n\nggplot(\n  damages_crops,\n  aes(x = begin_date, y = damage_val_crop)\n) +\n  geom_point()"
+    "text": "How have the damages from storm events changed over time?\n\nggplot(\n  df,\n  aes(x = begin_date, y = damage_val_prop)\n) +\n  geom_point()\n\nWarning: Removed 27251 rows containing missing values (`geom_point()`).\n\n\n\n\n\n\nggplot(\n  df,\n  aes(x = begin_date, y = damage_val_crop)\n) +\n  geom_point()\n\nWarning: Removed 32231 rows containing missing values (`geom_point()`)."
   },
   {
     "objectID": "index.html",
