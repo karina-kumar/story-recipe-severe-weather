@@ -76,11 +76,11 @@ sorted_damages_crop
 ## What year had the most damages?
 
 ```{r most-year}
-yr_damage_prop <- damages_property |> group_by(year(begin_date)) |> 
+yr_damage_prop <- damages_property |> group_by(yr = year(begin_date)) |> 
   summarize(total_damage_prop = sum(damage_val_prop)) |> 
   arrange(total_damage_prop |> desc())
 
-yr_damage_crop <- damages_crops |> group_by(year(begin_date)) |> 
+yr_damage_crop <- damages_crops |> group_by(yr = year(begin_date)) |> 
   summarize(total_damage_crop = sum(damage_val_crop)) |> 
   arrange(total_damage_crop |> desc())
 
