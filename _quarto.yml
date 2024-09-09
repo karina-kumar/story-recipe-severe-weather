@@ -13,6 +13,8 @@ website:
         text: Cleaning
       - href: 02-BasicAnalysis.qmd
         text: Statewide Analysis
+      - href: 03-MoreAnalysis.qmd
+        text: Interactive Table
 
 format:
   html:

@@ -42,6 +42,27 @@
     "text": "Export\n\nclean_storm |&gt; write_rds(\"data-processed/01-storm-data.rds\")\n\n```"
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+  },
+  {
+    "objectID": "about.html#project-questions",
+    "href": "about.html#project-questions",
+    "title": "About",
+    "section": "",
+    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Severe Weather and Damage Trends in Texas",
+    "section": "",
+    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
+  },
+  {
     "objectID": "02-BasicAnalysis.html",
     "href": "02-BasicAnalysis.html",
     "title": "Statewide Analysis",
@@ -91,24 +112,10 @@
     "text": "How have the damages from storm events changed over time?\n\nggplot(\n  df,\n  aes(x = begin_date, y = damage_val_prop)\n) +\n  geom_point()\n\nWarning: Removed 27251 rows containing missing values (`geom_point()`).\n\n\n\n\n\n\nggplot(\n  df,\n  aes(x = begin_date, y = damage_val_crop)\n) +\n  geom_point()\n\nWarning: Removed 32231 rows containing missing values (`geom_point()`)."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Severe Weather and Damage Trends in Texas",
+    "objectID": "03-MoreAnalysis.html",
+    "href": "03-MoreAnalysis.html",
+    "title": "Story Recipe: Severe Weather Damage in Texas",
     "section": "",
-    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
-  },
-  {
-    "objectID": "about.html#project-questions",
-    "href": "about.html#project-questions",
-    "title": "About",
-    "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\n\nstorms &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\n\ndamages &lt;- storms |&gt; select(\n  EVENT_TYPE,\n  CZ_NAME,\n  CZ_TYPE,\n  CZ_FIPS,\n  damage_val_prop,\n  damage_val_crop, \n  begin_date\n  \n  \n)\n\ndamages |&gt; glimpse()\n\nRows: 104,554\nColumns: 7\n$ EVENT_TYPE      &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Winte…\n$ CZ_NAME         &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\", …\n$ CZ_TYPE         &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\",…\n$ CZ_FIPS         &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, 12…\n$ damage_val_prop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ damage_val_crop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ begin_date      &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 2000-…\n\n\n\nreactable(\n    damages, \n    searchable = TRUE,\n    columns = list(\n    EVENT_TYPE = colDef(name = \"Event Type\", filterable = TRUE),\n    CZ_NAME = colDef(name = \"Location\", filterable = TRUE),\n    CZ_TYPE = colDef(name = \"County/Zone\"),\n    CZ_FIPS = colDef(name = \"FIPS Code\", filterable = TRUE),\n    damage_val_prop = colDef(align = \"center\", name = \"Damages to Property\", defaultSortOrder = \"desc\"),\n    damage_val_crop = colDef(align = \"center\", name = \"Damages to Crops\", defaultSortOrder = \"desc\"),\n    begin_date = colDef(name = \"Start Date\", defaultSortOrder = \"asc\")\n    )\n  )"
   }
 ]
