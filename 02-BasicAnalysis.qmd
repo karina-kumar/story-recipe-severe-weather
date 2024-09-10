@@ -111,22 +111,16 @@ ggplot (
 
 
 
-```{r}
-most_damage |> arrange(total_damage_crop |> desc())
-```
-
-Droughts caused the most damage to crops in Texas out of all severe weather events with $9.9 billion of damage.
-
 ## Where did the most damaging storms occur?
 
 ```{r sort-prop}
-sorted_damages_prop <- df |> arrange(damage_val_prop |> desc())
+sorted_damages_prop <- storms |> arrange(damage_val_prop |> desc())
 
 sorted_damages_prop
 ```
 
 ```{r sort-crop}
-sorted_damages_crop <- df |> arrange(damage_val_crop |> desc())
+sorted_damages_crop <- storms |> arrange(damage_val_crop |> desc())
 
 sorted_damages_crop
 ```
@@ -139,7 +133,7 @@ sorted_damages_crop
 
 ```{r plot-prop}
 ggplot(
-  df,
+  storms,
   aes(x = begin_date, y = damage_val_prop)
 ) +
   geom_point()
@@ -148,7 +142,7 @@ ggplot(
 
 ```{r plot-crop}
 ggplot(
-  df,
+  storms,
   aes(x = begin_date, y = damage_val_crop)
 ) +
   geom_point()
