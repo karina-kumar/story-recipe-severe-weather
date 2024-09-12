@@ -1,0 +1,79 @@
+---
+title: "04-AnalysisTemplate"
+---
+
+This document will act as a report template for reports on a subset of counties. 
+
+First we will answer the same questions from our basic analysis.
+
+## Setup
+
+```{r}
+library(tidyverse)
+```
+
+## Reading in data
+
+```{r}
+storms <- read_rds("data-processed/02-storm-data.rds")
+```
+
+
+# Answering Questions
+
+## What do damages from storms look like over time?
+
+```{r}
+yr_damages <- storms |> group_by(yr = year(begin_date)) |> 
+  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
+  arrange(total_damages |> desc())
+
+yr_damages
+```
+
+Now let's plot it.
+
+```{r}
+ggplot(
+  yr_damages,
+  aes(x = yr, y =total_damages)
+) + geom_col() +
+  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))
+```
+
+## Which storm types cause the most damage?
+
+
+```{r most-damage}
+#now groupby event type and sum up damages
+most_damage <- storms |> group_by(event_type) |> 
+  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
+  arrange(total_damages |> desc())
+
+most_damage
+```
+
+```{r}
+most_damage_time <- storms |> group_by(event_type, yr = year(begin_date)) |> 
+  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
+  arrange(yr |> desc()) |> 
+  filter(total_damages > 0)
+
+most_damage_time
+```
+
+```{r}
+ggplot (
+  most_damage_time,
+  aes(x = yr, y = total_damages, color = event_type)
+) + geom_line()
+```
+
+## Most Damaging Storms 
+
+```{r}
+sorted_damages <- storms |> arrange(total_damages |> desc())
+sorted_damages |> head(10)
+
+```
