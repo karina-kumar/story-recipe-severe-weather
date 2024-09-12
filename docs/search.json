@@ -1,5 +1,173 @@
 [
   {
+    "objectID": "05-ShinyDataTable.html",
+    "href": "05-ShinyDataTable.html",
+    "title": "Shiny App",
+    "section": "",
+    "text": "library(shiny)\n\nWarning: package 'shiny' was built under R version 4.3.3\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(tigris)\n\nWarning: package 'tigris' was built under R version 4.3.1\n\n\nTo enable caching of data, set `options(tigris_use_cache = TRUE)`\nin your R script or .Rprofile.\n\n\n\ntexas_counties &lt;- list_counties(\"texas\")\ntx_counties &lt;- texas_counties |&gt; select(county) |&gt; mutate(county = toupper(county))\n\ntx_counties |&gt; head()\n\n\n\n  \n\n\n\n\nstorms &lt;- readRDS(\"data-processed/02-storm-data.rds\")\n\nstorms |&gt; head()\n\n\n\n  \n\n\n\n\n#Define UI ----\nui &lt;- fluidPage(\n    \n    # Copy the line below to make a select box \n    selectInput(\"select\", label = h3(\"Select box\"), \n                choices = tx_counties, \n                multiple = TRUE),\n    \n    dataTableOutput(outputId = \"stormtable\")\n  )\n\n`shiny::dataTableOutput()` is deprecated as of shiny 1.8.1.\nPlease use `DT::DTOutput()` instead.\nSince you have a suitable version of DT (&gt;= v0.32.1), shiny::dataTableOutput() will automatically use DT::DTOutput() under-the-hood.\nIf this happens to break your app, set `options(shiny.legacy.datatable = TRUE)` to get the legacy datatable implementation (or `FALSE` to squelch this message).\nSee &lt;https://rstudio.github.io/DT/shiny.html&gt; for more information.\n\n# Define server logic ----\nserver &lt;- function(input, output) {\n  output$stormtable &lt;- DT::renderDataTable({\n    if (is.null(input$select) || length(input$select) == 0) {\n      # No selection made, return the full dataset\n      filtered_data &lt;- storms\n    } else {\n      # Filter the dataset based on selections\n      filtered_data &lt;- storms %&gt;%\n        filter(location %in% input$select)\n    }\n    \n    # Return the datatable\n    DT::datatable(filtered_data)\n  })\n}\n\n# Run the app ----\nshinyApp(ui = ui, server = server)"
+  },
+  {
+    "objectID": "03-MoreAnalysis.html",
+    "href": "03-MoreAnalysis.html",
+    "title": "Story Recipe: Severe Weather Damage in Texas",
+    "section": "",
+    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\n\nstorms &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\n\ndamages &lt;- storms |&gt; select(\n  EVENT_TYPE,\n  CZ_NAME,\n  CZ_TYPE,\n  CZ_FIPS,\n  damage_val_prop,\n  damage_val_crop, \n  begin_date\n  \n  \n)\n\ndamages |&gt; glimpse()\n\nRows: 104,554\nColumns: 7\n$ EVENT_TYPE      &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Winte…\n$ CZ_NAME         &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\", …\n$ CZ_TYPE         &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\",…\n$ CZ_FIPS         &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, 12…\n$ damage_val_prop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ damage_val_crop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ begin_date      &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 2000-…\n\n\n\nreactable(\n    damages, \n    searchable = TRUE,\n    columns = list(\n    EVENT_TYPE = colDef(name = \"Event Type\", filterable = TRUE),\n    CZ_NAME = colDef(name = \"Location\", filterable = TRUE),\n    CZ_TYPE = colDef(name = \"County/Zone\"),\n    CZ_FIPS = colDef(name = \"FIPS Code\", filterable = TRUE),\n    damage_val_prop = colDef(align = \"center\", name = \"Damages to Property\", defaultSortOrder = \"desc\"),\n    damage_val_crop = colDef(align = \"center\", name = \"Damages to Crops\", defaultSortOrder = \"desc\"),\n    begin_date = colDef(name = \"Start Date\", defaultSortOrder = \"asc\")\n    )\n  )"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html",
+    "href": "02-BasicAnalysis.html",
+    "title": "Statewide Analysis",
+    "section": "",
+    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#setup",
+    "href": "02-BasicAnalysis.html#setup",
+    "title": "Statewide Analysis",
+    "section": "",
+    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#read-in-clean-data",
+    "href": "02-BasicAnalysis.html#read-in-clean-data",
+    "title": "Statewide Analysis",
+    "section": "Read in Clean Data",
+    "text": "Read in Clean Data\n\ndf &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\ndf |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
+    "href": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
+    "title": "Statewide Analysis",
+    "section": "Clean up data more for analysis",
+    "text": "Clean up data more for analysis\nI am going to remove the unnecessary columns for this analysis and change the order of the columns. I am also going to create a new column that is total damages (damage_val_prop + damage_val_crop).\n\nstorms &lt;- df |&gt; mutate(\n  event_type = EVENT_TYPE,\n  location = CZ_NAME,\n  FIPS = CZ_FIPS,\n  CZ_type = CZ_TYPE\n\n)\n\nstorms &lt;- storms |&gt; rowwise() |&gt; mutate(\n  total_damages = sum(damage_val_prop, damage_val_crop, na.rm = TRUE)\n) |&gt; select(\n  event_type,\n  location,\n  CZ_type,\n  FIPS,\n  total_damages,\n  damage_val_prop,\n  damage_val_crop,\n  begin_date\n)\n\nstorms\n\n\n\n  \n\n\n\nI am going to export this version of this data.\n\nstorms |&gt; write_rds(\"data-processed/02-storm-data.rds\")"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
+    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
+    "title": "Statewide Analysis",
+    "section": "What do damages from storms look like over time?",
+    "text": "What do damages from storms look like over time?\n\nyr_damages &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nyr_damages\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages,\n  aes(x = yr, y =total_damages)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage?",
+    "text": "Which storm types cause the most damage?\n\n#now groupby event type and sum up damages\nmost_damage &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\n\nmost_damage_time &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time,\n  aes(x = yr, y = total_damages, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#most-damaging-storms",
+    "href": "02-BasicAnalysis.html#most-damaging-storms",
+    "title": "Statewide Analysis",
+    "section": "Most Damaging Storms",
+    "text": "Most Damaging Storms\n\nsorted_damages &lt;- storms |&gt; arrange(total_damages |&gt; desc())\nsorted_damages |&gt; head(10)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
+    "href": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
+    "title": "Statewide Analysis",
+    "section": "What do damages to property from storms look like over time?",
+    "text": "What do damages to property from storms look like over time?\n\nyr_damages_prop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nyr_damages_prop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_prop,\n  aes(x = yr, y =total_damages_prop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage to property?",
+    "text": "Which storm types cause the most damage to property?\n\n#now groupby event type and sum up damages\nmost_damage_prop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nmost_damage_prop\n\n\n\n  \n\n\n\n\nmost_damage_time_prop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_prop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_prop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_prop,\n  aes(x = yr, y = total_damages_prop, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#most-damaging-storms-to-property",
+    "href": "02-BasicAnalysis.html#most-damaging-storms-to-property",
+    "title": "Statewide Analysis",
+    "section": "Most Damaging Storms to property",
+    "text": "Most Damaging Storms to property\n\nsorted_damages_prop &lt;- storms |&gt; arrange(damage_val_prop |&gt; desc())\nsorted_damages_prop |&gt; head(10)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
+    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
+    "title": "Statewide Analysis",
+    "section": "What do damages from storms look like over time for crops?",
+    "text": "What do damages from storms look like over time for crops?\n\nyr_damages_crop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nyr_damages_crop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_crop,\n  aes(x = yr, y =total_damages_crop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage to crops?",
+    "text": "Which storm types cause the most damage to crops?\n\n#now groupby event type and sum up damages\nmost_damage_crop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nmost_damage_crop\n\n\n\n  \n\n\n\n\nmost_damage_time_crop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_crop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_crop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_crop,\n  aes(x = yr, y = total_damages_crop, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#most-damaging-storms-to-crops",
+    "href": "02-BasicAnalysis.html#most-damaging-storms-to-crops",
+    "title": "Statewide Analysis",
+    "section": "Most Damaging Storms to crops",
+    "text": "Most Damaging Storms to crops\n\nsorted_damages_crop &lt;- storms |&gt; arrange(damage_val_crop |&gt; desc())\nsorted_damages_crop |&gt; head(10)"
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html",
+    "href": "04-AnalysisTemplate.html",
+    "title": "04-AnalysisTemplate",
+    "section": "",
+    "text": "This document will act as a report template for reports on a subset of counties.\nFirst we will answer the same questions from our basic analysis."
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html#setup",
+    "href": "04-AnalysisTemplate.html#setup",
+    "title": "04-AnalysisTemplate",
+    "section": "Setup",
+    "text": "Setup\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors"
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html#reading-in-data",
+    "href": "04-AnalysisTemplate.html#reading-in-data",
+    "title": "04-AnalysisTemplate",
+    "section": "Reading in data",
+    "text": "Reading in data\n\nstorms &lt;- read_rds(\"data-processed/02-storm-data.rds\")"
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html#what-do-damages-from-storms-look-like-over-time",
+    "href": "04-AnalysisTemplate.html#what-do-damages-from-storms-look-like-over-time",
+    "title": "04-AnalysisTemplate",
+    "section": "What do damages from storms look like over time?",
+    "text": "What do damages from storms look like over time?\n\nyr_damages &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nyr_damages\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages,\n  aes(x = yr, y =total_damages)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html#which-storm-types-cause-the-most-damage",
+    "href": "04-AnalysisTemplate.html#which-storm-types-cause-the-most-damage",
+    "title": "04-AnalysisTemplate",
+    "section": "Which storm types cause the most damage?",
+    "text": "Which storm types cause the most damage?\n\n#now groupby event type and sum up damages\nmost_damage &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\n\nmost_damage_time &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time,\n  aes(x = yr, y = total_damages, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "04-AnalysisTemplate.html#most-damaging-storms",
+    "href": "04-AnalysisTemplate.html#most-damaging-storms",
+    "title": "04-AnalysisTemplate",
+    "section": "Most Damaging Storms",
+    "text": "Most Damaging Storms\n\nsorted_damages &lt;- storms |&gt; arrange(total_damages |&gt; desc())\nsorted_damages |&gt; head(10)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Severe Weather and Damage Trends in Texas",
+    "section": "",
+    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+  },
+  {
+    "objectID": "about.html#project-questions",
+    "href": "about.html#project-questions",
+    "title": "About",
+    "section": "",
+    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+  },
+  {
     "objectID": "01-Cleaning.html",
     "href": "01-Cleaning.html",
     "title": "01-Cleaning",
@@ -40,96 +208,5 @@
     "title": "01-Cleaning",
     "section": "Export",
     "text": "Export\n\nclean_storm |&gt; write_rds(\"data-processed/01-storm-data.rds\")\n\n```"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
-  },
-  {
-    "objectID": "about.html#project-questions",
-    "href": "about.html#project-questions",
-    "title": "About",
-    "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Severe Weather and Damage Trends in Texas",
-    "section": "",
-    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
-  },
-  {
-    "objectID": "02-BasicAnalysis.html",
-    "href": "02-BasicAnalysis.html",
-    "title": "Statewide Analysis",
-    "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#setup",
-    "href": "02-BasicAnalysis.html#setup",
-    "title": "Statewide Analysis",
-    "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#read-in-clean-data",
-    "href": "02-BasicAnalysis.html#read-in-clean-data",
-    "title": "Statewide Analysis",
-    "section": "Read in Clean Data",
-    "text": "Read in Clean Data\n\ndf &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\ndf |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
-    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
-    "title": "Statewide Analysis",
-    "section": "Which storm types cause the most damage?",
-    "text": "Which storm types cause the most damage?\n\n#now groupby event type and sum up damages\nmost_damage &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\n\nmost_damage_time &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc())\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time,\n  aes(x = yr, y = total_damages, color = event_type)\n) + geom_line()"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#where-did-the-most-damaging-storms-occur",
-    "href": "02-BasicAnalysis.html#where-did-the-most-damaging-storms-occur",
-    "title": "Statewide Analysis",
-    "section": "Where did the most damaging storms occur?",
-    "text": "Where did the most damaging storms occur?\n\nsorted_damages_prop &lt;- storms |&gt; arrange(damage_val_prop |&gt; desc())\n\nsorted_damages_prop\n\n\n\n  \n\n\n\n\nsorted_damages_crop &lt;- storms |&gt; arrange(damage_val_crop |&gt; desc())\n\nsorted_damages_crop"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#what-year-had-the-most-damages",
-    "href": "02-BasicAnalysis.html#what-year-had-the-most-damages",
-    "title": "Statewide Analysis",
-    "section": "What year had the most damages?",
-    "text": "What year had the most damages?"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#how-have-the-damages-from-storm-events-changed-over-time",
-    "href": "02-BasicAnalysis.html#how-have-the-damages-from-storm-events-changed-over-time",
-    "title": "Statewide Analysis",
-    "section": "How have the damages from storm events changed over time?",
-    "text": "How have the damages from storm events changed over time?\n\nggplot(\n  storms,\n  aes(x = begin_date, y = damage_val_prop)\n) +\n  geom_point()\n\nWarning: Removed 27251 rows containing missing values (`geom_point()`).\n\n\n\n\n\n\nggplot(\n  storms,\n  aes(x = begin_date, y = damage_val_crop)\n) +\n  geom_point()\n\nWarning: Removed 32231 rows containing missing values (`geom_point()`)."
-  },
-  {
-    "objectID": "03-MoreAnalysis.html",
-    "href": "03-MoreAnalysis.html",
-    "title": "Story Recipe: Severe Weather Damage in Texas",
-    "section": "",
-    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\n\nstorms &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\n\ndamages &lt;- storms |&gt; select(\n  EVENT_TYPE,\n  CZ_NAME,\n  CZ_TYPE,\n  CZ_FIPS,\n  damage_val_prop,\n  damage_val_crop, \n  begin_date\n  \n  \n)\n\ndamages |&gt; glimpse()\n\nRows: 104,554\nColumns: 7\n$ EVENT_TYPE      &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Winte…\n$ CZ_NAME         &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\", …\n$ CZ_TYPE         &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\",…\n$ CZ_FIPS         &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, 12…\n$ damage_val_prop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ damage_val_crop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ begin_date      &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 2000-…\n\n\n\nreactable(\n    damages, \n    searchable = TRUE,\n    columns = list(\n    EVENT_TYPE = colDef(name = \"Event Type\", filterable = TRUE),\n    CZ_NAME = colDef(name = \"Location\", filterable = TRUE),\n    CZ_TYPE = colDef(name = \"County/Zone\"),\n    CZ_FIPS = colDef(name = \"FIPS Code\", filterable = TRUE),\n    damage_val_prop = colDef(align = \"center\", name = \"Damages to Property\", defaultSortOrder = \"desc\"),\n    damage_val_crop = colDef(align = \"center\", name = \"Damages to Crops\", defaultSortOrder = \"desc\"),\n    begin_date = colDef(name = \"Start Date\", defaultSortOrder = \"asc\")\n    )\n  )"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
-    "href": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
-    "title": "Statewide Analysis",
-    "section": "Clean up data more for analysis",
-    "text": "Clean up data more for analysis\nI am going to remove the unnecessary columns for this analysis and change the order of the columns. I am also going to create a new column that is total damages (damage_val_prop + damage_val_crop).\n\nstorms &lt;- df |&gt; mutate(\n  event_type = EVENT_TYPE,\n  location = CZ_NAME,\n  FIPS = CZ_FIPS,\n  CZ_type = CZ_TYPE\n\n)\n\nstorms &lt;- storms |&gt; rowwise() |&gt; mutate(\n  total_damages = sum(damage_val_prop, damage_val_crop, na.rm = TRUE)\n) |&gt; select(\n  event_type,\n  location,\n  CZ_type,\n  FIPS,\n  total_damages,\n  damage_val_prop,\n  damage_val_crop,\n  begin_date\n)\n\nstorms"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
-    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
-    "title": "Statewide Analysis",
-    "section": "What do damages from storms look like over time?",
-    "text": "What do damages from storms look like over time?\n\nyr_damages &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nyr_damages\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages,\n  aes(x = yr, y =total_damages)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
   }
 ]

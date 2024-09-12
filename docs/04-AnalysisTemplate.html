@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Story Recipe: Severe Weather Damage in Texas - 04-AnalysisTemplate</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Story Recipe: Severe Weather Damage in Texas</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Cleaning.html" rel="" target="">
+ <span class="menu-text">Cleaning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-BasicAnalysis.html" rel="" target="">
+ <span class="menu-text">Statewide Analysis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./03-MoreAnalysis.html" rel="" target="">
+ <span class="menu-text">Interactive Table</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./05-ShinyDataTable.html" rel="" target="">
+ <span class="menu-text">Shiny Interactive Table</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#reading-in-data" id="toc-reading-in-data" class="nav-link" data-scroll-target="#reading-in-data">Reading in data</a></li>
+  <li><a href="#answering-questions" id="toc-answering-questions" class="nav-link" data-scroll-target="#answering-questions">Answering Questions</a>
+  <ul class="collapse">
+  <li><a href="#what-do-damages-from-storms-look-like-over-time" id="toc-what-do-damages-from-storms-look-like-over-time" class="nav-link" data-scroll-target="#what-do-damages-from-storms-look-like-over-time">What do damages from storms look like over time?</a></li>
+  <li><a href="#which-storm-types-cause-the-most-damage" id="toc-which-storm-types-cause-the-most-damage" class="nav-link" data-scroll-target="#which-storm-types-cause-the-most-damage">Which storm types cause the most damage?</a></li>
+  <li><a href="#most-damaging-storms" id="toc-most-damaging-storms" class="nav-link" data-scroll-target="#most-damaging-storms">Most Damaging Storms</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">04-AnalysisTemplate</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>This document will act as a report template for reports on a subset of counties.</p>
+<p>First we will answer the same questions from our basic analysis.</p>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+</section>
+<section id="reading-in-data" class="level2">
+<h2 class="anchored" data-anchor-id="reading-in-data">Reading in data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>storms <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data-processed/02-storm-data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="answering-questions" class="level1">
+<h1>Answering Questions</h1>
+<section id="what-do-damages-from-storms-look-like-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="what-do-damages-from-storms-look-like-over-time">What do damages from storms look like over time?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>yr_damages <span class="ot">&lt;-</span> storms <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="at">yr =</span> <span class="fu">year</span>(begin_date)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_damages =</span> <span class="fu">sum</span>(total_damages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(total_damages <span class="sc">|&gt;</span> <span class="fu">desc</span>())</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>yr_damages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["yr"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["total_damages"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"2017","2":"51631759600"},{"1":"2008","2":"16571826700"},{"1":"2001","2":"6081526497"},{"1":"2013","2":"3658646100"},{"1":"2016","2":"3611894800"},{"1":"2012","2":"3518060210"},{"1":"2005","2":"3339365414"},{"1":"2019","2":"3100530900"},{"1":"2006","2":"3007437570"},{"1":"2011","2":"2978887000"},{"1":"2020","2":"2953603350"},{"1":"2015","2":"2598695570"},{"1":"2023","2":"2307999800"},{"1":"2021","2":"1852147370"},{"1":"2022","2":"1527393200"},{"1":"2014","2":"1150440050"},{"1":"2000","2":"1081149062"},{"1":"2009","2":"852221350"},{"1":"2007","2":"572086700"},{"1":"2003","2":"532319731"},{"1":"2010","2":"344817000"},{"1":"2018","2":"338620500"},{"1":"2002","2":"310154156"},{"1":"2004","2":"309477202"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now let’s plot it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  yr_damages,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> yr, <span class="at">y =</span>total_damages)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">2000</span>, <span class="dv">2023</span>, <span class="at">by =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="04-AnalysisTemplate_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="which-storm-types-cause-the-most-damage" class="level2">
+<h2 class="anchored" data-anchor-id="which-storm-types-cause-the-most-damage">Which storm types cause the most damage?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now groupby event type and sum up damages</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>most_damage <span class="ot">&lt;-</span> storms <span class="sc">|&gt;</span> <span class="fu">group_by</span>(event_type) <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_damages =</span> <span class="fu">sum</span>(total_damages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(total_damages <span class="sc">|&gt;</span> <span class="fu">desc</span>())</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>most_damage</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["event_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_damages"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Flash Flood","2":"48757310236"},{"1":"Hail","2":"12354958586"},{"1":"Drought","2":"10927756000"},{"1":"Storm Surge/Tide","2":"9903555740"},{"1":"Tropical Storm","2":"9341032000"},{"1":"Hurricane (Typhoon)","2":"8123480300"},{"1":"Hurricane","2":"6193080000"},{"1":"Tornado","2":"3795014762"},{"1":"Flood","2":"1433243600"},{"1":"Thunderstorm Wind","2":"1125122044"},{"1":"Wildfire","2":"844980605"},{"1":"Frost/Freeze","2":"471207620"},{"1":"Ice Storm","2":"202411000"},{"1":"Winter Storm","2":"167170000"},{"1":"Extreme Cold/Wind Chill","2":"156729800"},{"1":"Cold/Wind Chill","2":"99612000"},{"1":"Lightning","2":"71270835"},{"1":"Heavy Rain","2":"62024060"},{"1":"Heavy Snow","2":"53922000"},{"1":"High Wind","2":"48107763"},{"1":"Blizzard","2":"47235000"},{"1":"Winter Weather","2":"26945200"},{"1":"Dust Storm","2":"10395105"},{"1":"Dense Fog","2":"6619025"},{"1":"Strong Wind","2":"4350552"},{"1":"Coastal Flood","2":"1360000"},{"1":"Sleet","2":"761000"},{"1":"Heat","2":"550000"},{"1":"Tropical Depression","2":"507000"},{"1":"Excessive Heat","2":"200000"},{"1":"Sneakerwave","2":"100000"},{"1":"Dust Devil","2":"48000"},{"1":"Astronomical Low Tide","2":"0"},{"1":"Debris Flow","2":"0"},{"1":"Dense Smoke","2":"0"},{"1":"Freezing Fog","2":"0"},{"1":"Funnel Cloud","2":"0"},{"1":"High Surf","2":"0"},{"1":"Rip Current","2":"0"},{"1":"Seiche","2":"0"},{"1":"Waterspout","2":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>most_damage_time <span class="ot">&lt;-</span> storms <span class="sc">|&gt;</span> <span class="fu">group_by</span>(event_type, <span class="at">yr =</span> <span class="fu">year</span>(begin_date)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_damages =</span> <span class="fu">sum</span>(total_damages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(yr <span class="sc">|&gt;</span> <span class="fu">desc</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_damages <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'event_type'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>most_damage_time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["event_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["yr"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["total_damages"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Coastal Flood","2":"2023","3":"10000"},{"1":"Drought","2":"2023","3":"122350000"},{"1":"Dust Storm","2":"2023","3":"30000"},{"1":"Flash Flood","2":"2023","3":"2659000"},{"1":"Flood","2":"2023","3":"285000"},{"1":"Hail","2":"2023","3":"2020295500"},{"1":"High Wind","2":"2023","3":"285000"},{"1":"Lightning","2":"2023","3":"2733300"},{"1":"Strong Wind","2":"2023","3":"72000"},{"1":"Thunderstorm Wind","2":"2023","3":"47659500"},{"1":"Tornado","2":"2023","3":"14481000"},{"1":"Tropical Storm","2":"2023","3":"435000"},{"1":"Wildfire","2":"2023","3":"9535500"},{"1":"Winter Storm","2":"2023","3":"84179000"},{"1":"Winter Weather","2":"2023","3":"2990000"},{"1":"Drought","2":"2022","3":"107820000"},{"1":"Flash Flood","2":"2022","3":"855544100"},{"1":"Flood","2":"2022","3":"500210000"},{"1":"Hail","2":"2022","3":"3907500"},{"1":"High Wind","2":"2022","3":"76000"},{"1":"Lightning","2":"2022","3":"787100"},{"1":"Strong Wind","2":"2022","3":"74000"},{"1":"Thunderstorm Wind","2":"2022","3":"6235500"},{"1":"Tornado","2":"2022","3":"46904000"},{"1":"Wildfire","2":"2022","3":"5765000"},{"1":"Winter Storm","2":"2022","3":"70000"},{"1":"Coastal Flood","2":"2021","3":"10000"},{"1":"Cold/Wind Chill","2":"2021","3":"96497000"},{"1":"Dense Fog","2":"2021","3":"195000"},{"1":"Extreme Cold/Wind Chill","2":"2021","3":"150079800"},{"1":"Flash Flood","2":"2021","3":"31299000"},{"1":"Flood","2":"2021","3":"273000"},{"1":"Frost/Freeze","2":"2021","3":"460157620"},{"1":"Hail","2":"2021","3":"994134800"},{"1":"Heavy Rain","2":"2021","3":"55581200"},{"1":"Heavy Snow","2":"2021","3":"6000"},{"1":"High Wind","2":"2021","3":"10000"},{"1":"Ice Storm","2":"2021","3":"400000"},{"1":"Lightning","2":"2021","3":"1726500"},{"1":"Storm Surge/Tide","2":"2021","3":"25000"},{"1":"Strong Wind","2":"2021","3":"5000"},{"1":"Thunderstorm Wind","2":"2021","3":"18017450"},{"1":"Tornado","2":"2021","3":"13247000"},{"1":"Tropical Storm","2":"2021","3":"100000"},{"1":"Wildfire","2":"2021","3":"335000"},{"1":"Winter Storm","2":"2021","3":"27478000"},{"1":"Winter Weather","2":"2021","3":"2570000"},{"1":"Coastal Flood","2":"2020","3":"200000"},{"1":"Flash Flood","2":"2020","3":"148686100"},{"1":"Flood","2":"2020","3":"1231000"},{"1":"Hail","2":"2020","3":"133917210"},{"1":"Hurricane","2":"2020","3":"1986970000"},{"1":"Lightning","2":"2020","3":"11502000"},{"1":"Storm Surge/Tide","2":"2020","3":"53123740"},{"1":"Strong Wind","2":"2020","3":"27000"},{"1":"Thunderstorm Wind","2":"2020","3":"16023300"},{"1":"Tornado","2":"2020","3":"12678000"},{"1":"Tropical Storm","2":"2020","3":"588345000"},{"1":"Wildfire","2":"2020","3":"900000"},{"1":"Drought","2":"2019","3":"34000"},{"1":"Flash Flood","2":"2019","3":"1010090500"},{"1":"Flood","2":"2019","3":"96000"},{"1":"Hail","2":"2019","3":"10351100"},{"1":"High Wind","2":"2019","3":"4726000"},{"1":"Lightning","2":"2019","3":"5898500"},{"1":"Strong Wind","2":"2019","3":"8400"},{"1":"Thunderstorm Wind","2":"2019","3":"29091900"},{"1":"Tornado","2":"2019","3":"2036354500"},{"1":"Wildfire","2":"2019","3":"3850000"},{"1":"Winter Weather","2":"2019","3":"30000"},{"1":"Drought","2":"2018","3":"109000"},{"1":"Flash Flood","2":"2018","3":"157979000"},{"1":"Flood","2":"2018","3":"129754000"},{"1":"Hail","2":"2018","3":"33706850"},{"1":"High Wind","2":"2018","3":"6000"},{"1":"Ice Storm","2":"2018","3":"5000"},{"1":"Lightning","2":"2018","3":"1513500"},{"1":"Sleet","2":"2018","3":"75000"},{"1":"Strong Wind","2":"2018","3":"65200"},{"1":"Thunderstorm Wind","2":"2018","3":"10075200"},{"1":"Tornado","2":"2018","3":"4631750"},{"1":"Wildfire","2":"2018","3":"515000"},{"1":"Winter Storm","2":"2018","3":"80000"},{"1":"Winter Weather","2":"2018","3":"105000"},{"1":"Coastal Flood","2":"2017","3":"110000"},{"1":"Drought","2":"2017","3":"27000"},{"1":"Dust Storm","2":"2017","3":"70000"},{"1":"Flash Flood","2":"2017","3":"43546726000"},{"1":"Flood","2":"2017","3":"88809500"},{"1":"Hail","2":"2017","3":"269948500"},{"1":"Heavy Snow","2":"2017","3":"85000"},{"1":"High Wind","2":"2017","3":"20000"},{"1":"Hurricane","2":"2017","3":"4206110000"},{"1":"Ice Storm","2":"2017","3":"14388000"},{"1":"Lightning","2":"2017","3":"5470300"},{"1":"Sneakerwave","2":"2017","3":"100000"},{"1":"Storm Surge/Tide","2":"2017","3":"532020000"},{"1":"Strong Wind","2":"2017","3":"55800"},{"1":"Thunderstorm Wind","2":"2017","3":"50663000"},{"1":"Tornado","2":"2017","3":"23433500"},{"1":"Tropical Storm","2":"2017","3":"2867471000"},{"1":"Wildfire","2":"2017","3":"25470000"},{"1":"Winter Weather","2":"2017","3":"782000"},{"1":"Coastal Flood","2":"2016","3":"70000"},{"1":"Drought","2":"2016","3":"7000"},{"1":"Flash Flood","2":"2016","3":"111183600"},{"1":"Flood","2":"2016","3":"97432000"},{"1":"Hail","2":"2016","3":"3360148400"},{"1":"Heavy Rain","2":"2016","3":"56000"},{"1":"High Wind","2":"2016","3":"543000"},{"1":"Lightning","2":"2016","3":"2096000"},{"1":"Strong Wind","2":"2016","3":"48800"},{"1":"Thunderstorm Wind","2":"2016","3":"23843500"},{"1":"Tornado","2":"2016","3":"16185000"},{"1":"Wildfire","2":"2016","3":"281500"},{"1":"Blizzard","2":"2015","3":"32635000"},{"1":"Drought","2":"2015","3":"299500"},{"1":"Flash Flood","2":"2015","3":"1671696200"},{"1":"Flood","2":"2015","3":"140850500"},{"1":"Hail","2":"2015","3":"608476570"},{"1":"Heavy Rain","2":"2015","3":"40000"},{"1":"Heavy Snow","2":"2015","3":"270000"},{"1":"High Wind","2":"2015","3":"30000"},{"1":"Ice Storm","2":"2015","3":"2427000"},{"1":"Lightning","2":"2015","3":"1867000"},{"1":"Sleet","2":"2015","3":"30000"},{"1":"Storm Surge/Tide","2":"2015","3":"1300000"},{"1":"Strong Wind","2":"2015","3":"8000"},{"1":"Thunderstorm Wind","2":"2015","3":"19585800"},{"1":"Tornado","2":"2015","3":"117061000"},{"1":"Tropical Depression","2":"2015","3":"502000"},{"1":"Wildfire","2":"2015","3":"665000"},{"1":"Winter Storm","2":"2015","3":"182000"},{"1":"Winter Weather","2":"2015","3":"770000"},{"1":"Drought","2":"2014","3":"23954000"},{"1":"Dust Storm","2":"2014","3":"40000"},{"1":"Flash Flood","2":"2014","3":"8006600"},{"1":"Flood","2":"2014","3":"101889000"},{"1":"Hail","2":"2014","3":"975465000"},{"1":"Heavy Rain","2":"2014","3":"635000"},{"1":"High Wind","2":"2014","3":"117000"},{"1":"Ice Storm","2":"2014","3":"305000"},{"1":"Lightning","2":"2014","3":"1674000"},{"1":"Sleet","2":"2014","3":"610000"},{"1":"Strong Wind","2":"2014","3":"100100"},{"1":"Thunderstorm Wind","2":"2014","3":"20069850"},{"1":"Tornado","2":"2014","3":"5590500"},{"1":"Wildfire","2":"2014","3":"10997000"},{"1":"Winter Storm","2":"2014","3":"422000"},{"1":"Winter Weather","2":"2014","3":"565000"},{"1":"Blizzard","2":"2013","3":"13280000"},{"1":"Drought","2":"2013","3":"2248077000"},{"1":"Flash Flood","2":"2013","3":"114620700"},{"1":"Flood","2":"2013","3":"1056700"},{"1":"Hail","2":"2013","3":"510555250"},{"1":"Heavy Rain","2":"2013","3":"352500"},{"1":"High Wind","2":"2013","3":"74000"},{"1":"Ice Storm","2":"2013","3":"21050000"},{"1":"Lightning","2":"2013","3":"3058800"},{"1":"Sleet","2":"2013","3":"16000"},{"1":"Strong Wind","2":"2013","3":"135000"},{"1":"Thunderstorm Wind","2":"2013","3":"444468150"},{"1":"Tornado","2":"2013","3":"270323000"},{"1":"Wildfire","2":"2013","3":"662000"},{"1":"Winter Storm","2":"2013","3":"29562000"},{"1":"Winter Weather","2":"2013","3":"1355000"},{"1":"Dense Fog","2":"2012","3":"6034000"},{"1":"Drought","2":"2012","3":"1288415000"},{"1":"Dust Storm","2":"2012","3":"1150000"},{"1":"Flash Flood","2":"2012","3":"25464500"},{"1":"Flood","2":"2012","3":"7952000"},{"1":"Hail","2":"2012","3":"1437242000"},{"1":"Heavy Rain","2":"2012","3":"185000"},{"1":"Heavy Snow","2":"2012","3":"1050000"},{"1":"High Wind","2":"2012","3":"1193500"},{"1":"Lightning","2":"2012","3":"4265610"},{"1":"Sleet","2":"2012","3":"30000"},{"1":"Strong Wind","2":"2012","3":"54900"},{"1":"Thunderstorm Wind","2":"2012","3":"18689200"},{"1":"Tornado","2":"2012","3":"724259000"},{"1":"Wildfire","2":"2012","3":"960500"},{"1":"Winter Storm","2":"2012","3":"15000"},{"1":"Winter Weather","2":"2012","3":"1100000"},{"1":"Coastal Flood","2":"2011","3":"5000"},{"1":"Dense Fog","2":"2011","3":"45000"},{"1":"Drought","2":"2011","3":"2369977500"},{"1":"Excessive Heat","2":"2011","3":"200000"},{"1":"Extreme Cold/Wind Chill","2":"2011","3":"6650000"},{"1":"Flash Flood","2":"2011","3":"850000"},{"1":"Frost/Freeze","2":"2011","3":"11010000"},{"1":"Hail","2":"2011","3":"9163700"},{"1":"Heavy Rain","2":"2011","3":"43000"},{"1":"Heavy Snow","2":"2011","3":"2236000"},{"1":"High Wind","2":"2011","3":"25878000"},{"1":"Ice Storm","2":"2011","3":"4220000"},{"1":"Lightning","2":"2011","3":"1982000"},{"1":"Strong Wind","2":"2011","3":"112500"},{"1":"Thunderstorm Wind","2":"2011","3":"20484900"},{"1":"Tornado","2":"2011","3":"10215500"},{"1":"Wildfire","2":"2011","3":"513926900"},{"1":"Winter Storm","2":"2011","3":"250000"},{"1":"Winter Weather","2":"2011","3":"1637000"},{"1":"Cold/Wind Chill","2":"2010","3":"3115000"},{"1":"Drought","2":"2010","3":"190000"},{"1":"Dust Storm","2":"2010","3":"50000"},{"1":"Flash Flood","2":"2010","3":"91010500"},{"1":"Flood","2":"2010","3":"98283000"},{"1":"Frost/Freeze","2":"2010","3":"40000"},{"1":"Hail","2":"2010","3":"50904500"},{"1":"Heavy Rain","2":"2010","3":"735000"},{"1":"Heavy Snow","2":"2010","3":"48850000"},{"1":"High Wind","2":"2010","3":"180500"},{"1":"Ice Storm","2":"2010","3":"6000"},{"1":"Lightning","2":"2010","3":"4402500"},{"1":"Storm Surge/Tide","2":"2010","3":"35000"},{"1":"Strong Wind","2":"2010","3":"1116500"},{"1":"Thunderstorm Wind","2":"2010","3":"11943500"},{"1":"Tornado","2":"2010","3":"9760000"},{"1":"Tropical Storm","2":"2010","3":"16650000"},{"1":"Wildfire","2":"2010","3":"1478000"},{"1":"Winter Storm","2":"2010","3":"3940000"},{"1":"Winter Weather","2":"2010","3":"2127000"},{"1":"Blizzard","2":"2009","3":"1320000"},{"1":"Dense Fog","2":"2009","3":"30000"},{"1":"Drought","2":"2009","3":"49513000"},{"1":"Dust Storm","2":"2009","3":"5890000"},{"1":"Flash Flood","2":"2009","3":"36150750"},{"1":"Flood","2":"2009","3":"10665000"},{"1":"Hail","2":"2009","3":"623387750"},{"1":"Heavy Rain","2":"2009","3":"112000"},{"1":"High Wind","2":"2009","3":"5467700"},{"1":"Ice Storm","2":"2009","3":"1127000"},{"1":"Lightning","2":"2009","3":"6936300"},{"1":"Strong Wind","2":"2009","3":"665200"},{"1":"Thunderstorm Wind","2":"2009","3":"41292150"},{"1":"Tornado","2":"2009","3":"38452500"},{"1":"Wildfire","2":"2009","3":"23168000"},{"1":"Winter Storm","2":"2009","3":"2110000"},{"1":"Winter Weather","2":"2009","3":"5934000"},{"1":"Drought","2":"2008","3":"1585000"},{"1":"Dust Devil","2":"2008","3":"23000"},{"1":"Flash Flood","2":"2008","3":"187808500"},{"1":"Flood","2":"2008","3":"207980500"},{"1":"Hail","2":"2008","3":"157891000"},{"1":"Heat","2":"2008","3":"550000"},{"1":"Heavy Rain","2":"2008","3":"3546000"},{"1":"High Wind","2":"2008","3":"985000"},{"1":"Hurricane (Typhoon)","2":"2008","3":"5825100000"},{"1":"Lightning","2":"2008","3":"3110000"},{"1":"Storm Surge/Tide","2":"2008","3":"9317012000"},{"1":"Strong Wind","2":"2008","3":"846600"},{"1":"Thunderstorm Wind","2":"2008","3":"89135300"},{"1":"Tornado","2":"2008","3":"56930000"},{"1":"Tropical Depression","2":"2008","3":"5000"},{"1":"Tropical Storm","2":"2008","3":"706790000"},{"1":"Wildfire","2":"2008","3":"8798600"},{"1":"Winter Weather","2":"2008","3":"3730200"},{"1":"Dense Fog","2":"2007","3":"140000"},{"1":"Drought","2":"2007","3":"450000"},{"1":"Dust Storm","2":"2007","3":"170000"},{"1":"Flash Flood","2":"2007","3":"324342000"},{"1":"Flood","2":"2007","3":"11942000"},{"1":"Hail","2":"2007","3":"65934500"},{"1":"Heavy Rain","2":"2007","3":"260000"},{"1":"Heavy Snow","2":"2007","3":"335000"},{"1":"High Wind","2":"2007","3":"2573000"},{"1":"Hurricane (Typhoon)","2":"2007","3":"38000000"},{"1":"Ice Storm","2":"2007","3":"2107000"},{"1":"Lightning","2":"2007","3":"2471300"},{"1":"Strong Wind","2":"2007","3":"34000"},{"1":"Thunderstorm Wind","2":"2007","3":"23361200"},{"1":"Tornado","2":"2007","3":"94929500"},{"1":"Tropical Storm","2":"2007","3":"60000"},{"1":"Wildfire","2":"2007","3":"185200"},{"1":"Winter Storm","2":"2007","3":"2199000"},{"1":"Winter Weather","2":"2007","3":"2593000"},{"1":"Coastal Flood","2":"2006","3":"955000"},{"1":"Dense Fog","2":"2006","3":"75000"},{"1":"Drought","2":"2006","3":"2380690000"},{"1":"Dust Storm","2":"2006","3":"2890000"},{"1":"Flash Flood","2":"2006","3":"211435295"},{"1":"Flood","2":"2006","3":"7752000"},{"1":"Hail","2":"2006","3":"133875867"},{"1":"Heavy Rain","2":"2006","3":"60000"},{"1":"Heavy Snow","2":"2006","3":"1010000"},{"1":"High Wind","2":"2006","3":"1456875"},{"1":"Ice Storm","2":"2006","3":"631000"},{"1":"Lightning","2":"2006","3":"1748000"},{"1":"Strong Wind","2":"2006","3":"584000"},{"1":"Thunderstorm Wind","2":"2006","3":"20079592"},{"1":"Tornado","2":"2006","3":"24024536"},{"1":"Wildfire","2":"2006","3":"219612405"},{"1":"Winter Storm","2":"2006","3":"40000"},{"1":"Winter Weather","2":"2006","3":"518000"},{"1":"Drought","2":"2005","3":"880360000"},{"1":"Flash Flood","2":"2005","3":"1879684"},{"1":"Flood","2":"2005","3":"980000"},{"1":"Hail","2":"2005","3":"105276714"},{"1":"Heavy Rain","2":"2005","3":"20000"},{"1":"High Wind","2":"2005","3":"725540"},{"1":"Hurricane (Typhoon)","2":"2005","3":"2249500000"},{"1":"Ice Storm","2":"2005","3":"70000"},{"1":"Lightning","2":"2005","3":"1056110"},{"1":"Storm Surge/Tide","2":"2005","3":"40000"},{"1":"Strong Wind","2":"2005","3":"213030"},{"1":"Thunderstorm Wind","2":"2005","3":"7839251"},{"1":"Tornado","2":"2005","3":"73406085"},{"1":"Tropical Storm","2":"2005","3":"40000"},{"1":"Wildfire","2":"2005","3":"17820000"},{"1":"Winter Weather","2":"2005","3":"139000"},{"1":"Flash Flood","2":"2004","3":"62651863"},{"1":"Flood","2":"2004","3":"731350"},{"1":"Hail","2":"2004","3":"211766542"},{"1":"Heavy Rain","2":"2004","3":"380360"},{"1":"High Wind","2":"2004","3":"150045"},{"1":"Lightning","2":"2004","3":"736005"},{"1":"Strong Wind","2":"2004","3":"54022"},{"1":"Thunderstorm Wind","2":"2004","3":"19294523"},{"1":"Tornado","2":"2004","3":"13642492"},{"1":"Winter Storm","2":"2004","3":"70000"},{"1":"Drought","2":"2003","3":"240000000"},{"1":"Dust Devil","2":"2003","3":"25000"},{"1":"Dust Storm","2":"2003","3":"15015"},{"1":"Flash Flood","2":"2003","3":"8624641"},{"1":"Flood","2":"2003","3":"23790015"},{"1":"Hail","2":"2003","3":"128065414"},{"1":"Heavy Rain","2":"2003","3":"3000"},{"1":"High Wind","2":"2003","3":"528603"},{"1":"Hurricane (Typhoon)","2":"2003","3":"10880300"},{"1":"Lightning","2":"2003","3":"3626100"},{"1":"Strong Wind","2":"2003","3":"70000"},{"1":"Thunderstorm Wind","2":"2003","3":"69905547"},{"1":"Tornado","2":"2003","3":"24620096"},{"1":"Tropical Storm","2":"2003","3":"6883000"},{"1":"Winter Storm","2":"2003","3":"15283000"},{"1":"Dense Fog","2":"2002","3":"25025"},{"1":"Dust Storm","2":"2002","3":"90090"},{"1":"Flash Flood","2":"2002","3":"92892413"},{"1":"Flood","2":"2002","3":"63005"},{"1":"Hail","2":"2002","3":"66549921"},{"1":"Heavy Rain","2":"2002","3":"15000"},{"1":"Heavy Snow","2":"2002","3":"30000"},{"1":"High Wind","2":"2002","3":"85000"},{"1":"Lightning","2":"2002","3":"970110"},{"1":"Strong Wind","2":"2002","3":"500"},{"1":"Thunderstorm Wind","2":"2002","3":"41057175"},{"1":"Tornado","2":"2002","3":"103860917"},{"1":"Tropical Storm","2":"2002","3":"4500000"},{"1":"Winter Storm","2":"2002","3":"15000"},{"1":"Drought","2":"2001","3":"445010000"},{"1":"Flash Flood","2":"2001","3":"22584016"},{"1":"Flood","2":"2001","3":"1038030"},{"1":"Hail","2":"2001","3":"367365413"},{"1":"High Wind","2":"2001","3":"1925000"},{"1":"Lightning","2":"2001","3":"1445300"},{"1":"Thunderstorm Wind","2":"2001","3":"51679005"},{"1":"Tornado","2":"2001","3":"40471733"},{"1":"Tropical Storm","2":"2001","3":"5149758000"},{"1":"Winter Storm","2":"2001","3":"250000"},{"1":"Dense Fog","2":"2000","3":"75000"},{"1":"Drought","2":"2000","3":"768888000"},{"1":"Flash Flood","2":"2000","3":"33125274"},{"1":"Flood","2":"2000","3":"180000"},{"1":"Hail","2":"2000","3":"76628585"},{"1":"Heavy Snow","2":"2000","3":"50000"},{"1":"High Wind","2":"2000","3":"1072000"},{"1":"Ice Storm","2":"2000","3":"155675000"},{"1":"Lightning","2":"2000","3":"194500"},{"1":"Thunderstorm Wind","2":"2000","3":"24627550"},{"1":"Tornado","2":"2000","3":"19553153"},{"1":"Wildfire","2":"2000","3":"55000"},{"1":"Winter Storm","2":"2000","3":"1025000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span> (</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  most_damage_time,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> yr, <span class="at">y =</span> total_damages, <span class="at">color =</span> event_type)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="04-AnalysisTemplate_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="most-damaging-storms" class="level2">
+<h2 class="anchored" data-anchor-id="most-damaging-storms">Most Damaging Storms</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sorted_damages <span class="ot">&lt;-</span> storms <span class="sc">|&gt;</span> <span class="fu">arrange</span>(total_damages <span class="sc">|&gt;</span> <span class="fu">desc</span>())</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sorted_damages <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["event_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["location"],"name":[2],"type":["chr"],"align":["left"]},{"label":["CZ_type"],"name":[3],"type":["chr"],"align":["left"]},{"label":["FIPS"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["total_damages"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["damage_val_prop"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["damage_val_crop"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["begin_date"],"name":[8],"type":["date"],"align":["right"]}],"data":[{"1":"Flash Flood","2":"HARRIS","3":"C","4":"201","5":"10000100000","6":"1.00e+10","7":"1e+05","8":"2017-08-26"},{"1":"Flash Flood","2":"GALVESTON","3":"C","4":"167","5":"10000010000","6":"1.00e+10","7":"1e+04","8":"2017-08-26"},{"1":"Flash Flood","2":"FORT BEND","3":"C","4":"157","5":"8000050000","6":"8.00e+09","7":"5e+04","8":"2017-08-26"},{"1":"Flash Flood","2":"MONTGOMERY","3":"C","4":"339","5":"7000010000","6":"7.00e+09","7":"1e+04","8":"2017-08-27"},{"1":"Tropical Storm","2":"HARRIS","3":"Z","4":"213","5":"5030000000","6":"5.03e+09","7":"NA","8":"2001-06-05"},{"1":"Storm Surge/Tide","2":"GALVESTON","3":"Z","4":"238","5":"4000000000","6":"4.00e+09","7":"NA","8":"2008-09-12"},{"1":"Storm Surge/Tide","2":"HARRIS","3":"Z","4":"213","5":"3000000000","6":"3.00e+09","7":"NA","8":"2008-09-12"},{"1":"Flash Flood","2":"JEFFERSON","3":"C","4":"245","5":"3000000000","6":"3.00e+09","7":"0e+00","8":"2017-08-27"},{"1":"Flash Flood","2":"BRAZORIA","3":"C","4":"39","5":"2000100000","6":"2.00e+09","7":"1e+05","8":"2017-08-26"},{"1":"Hurricane (Typhoon)","2":"HARRIS","3":"Z","4":"213","5":"2000000000","6":"2.00e+09","7":"NA","8":"2008-09-12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

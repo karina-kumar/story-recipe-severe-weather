@@ -15,6 +15,8 @@ website:
         text: Statewide Analysis
       - href: 03-MoreAnalysis.qmd
         text: Interactive Table
+      - href: 05-ShinyDataTable.qmd
+        text: Shiny Interactive Table
 
 format:
   html:

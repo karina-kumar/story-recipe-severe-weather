@@ -83,7 +83,7 @@ ggplot(
 ## Which storm types cause the most damage?
 
 
-```{r most-damage}
+```{r}
 #now groupby event type and sum up damages
 most_damage <- storms |> group_by(event_type) |> 
   summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
@@ -144,7 +144,7 @@ ggplot(
 ## Which storm types cause the most damage to property?
 
 
-```{r most-damage}
+```{r}
 #now groupby event type and sum up damages
 most_damage_prop <- storms |> group_by(event_type) |> 
   summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |> 

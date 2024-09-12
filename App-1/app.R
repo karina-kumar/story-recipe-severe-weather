@@ -1,8 +1,4 @@
-library(shiny)
-library(tidyverse)
-library(tigris)
 
-tx_counties <- texas_counties |> select(county) |> mutate(county = toupper(county))
 
 
 
