@@ -2,7 +2,7 @@
 title: "01-Cleaning"
 ---
 ### Setup
-Import Libraries:
+Importing the libraries I might or will definitely need.
 
 ```{r}
 library(tidyverse)
@@ -12,6 +12,8 @@ library(janitor)
 
 
 ### Import the Storm Data
+
+Read the storm event csv's into a single dataframe.
 
 ```{r import}
 df <- read_csv(c(
@@ -46,7 +48,7 @@ df |> glimpse()
 
 ## Narrow Results 
 
-I am only interested in storms in Texas for now. So let's filter for Texas
+I am only interested in storms in Texas for now. So I'm going to filter for Texas.
 
 ```{r texas}
 texas <- df |> filter( STATE == "TEXAS")
@@ -55,7 +57,7 @@ texas |> glimpse()
 ```
 ## Select Columns 
 
-I am going to select the columns I want to work with. 
+I am going to select the columns I think I want to work with. 
 
 ```{r select}
 storms <- texas |> select(
@@ -79,7 +81,9 @@ storms |> glimpse()
 
 ## Change types for some columns
 
-First, I am making the damage columns become numbers I can compare. First, I am separating the unit (k,m,b) from the number. 
+The damages columns are in a weird format with numbers and letters. I need them to be actual numbers so I can work with them. The date column is also the wrong type so I will change that too.
+
+First, I am making the damage columns become numbers I can compare, and I am separating the unit (k,m,b) from the number. 
 
 ```{r separate-col}
 separate_col_damage <- storms |> mutate(
@@ -104,7 +108,7 @@ damage_col_num
   
 ```
 
-Finally, I am using the units to multiple the number col and make a damage col with the actual values. 
+Finally, I am using the units to multiple the number column and make a damage columns with the actual values. 
 
 ```{r damage-col}
 damage_col <- damage_col_num |> mutate(
@@ -130,12 +134,26 @@ date_storm <- damage_col |> mutate(
 date_storm |> glimpse()
 ```
 
+I'm also going to uppercase all the values in the county column. First, I check to see how many could be wrong. Then I change the column to all uppercase. Then I check that the change happened. 
+
+```{r}
+#check that
+date_storm |> filter(CZ_NAME == "Travis")
+
+cleaned_storm <- date_storm |> mutate(
+  CZ_NAME = str_to_upper(CZ_NAME)
+)
+
+cleaned_storm |> filter(CZ_NAME == "Travis")
+```
+
+
 ## Select important columns
 
-Finally I am going to get rid of the columns I created that I don't need anymore.
+Finally I am going to get rid of the columns I created or other columns that I don't need anymore.
 
 ```{r select2}
-clean_storm <- date_storm |> select(
+clean_storm <- cleaned_storm |> select(
   -BEGIN_DATE_TIME,
   -END_DATE_TIME,
   -YEAR,
@@ -150,7 +168,10 @@ clean_storm <- date_storm |> select(
 clean_storm |> glimpse()
 ```
 
+
 ## Export
+
+Exporting the file as an rds so I can do an analysis. 
 
 ```{r export}
 clean_storm |> write_rds("data-processed/01-storm-data.rds")

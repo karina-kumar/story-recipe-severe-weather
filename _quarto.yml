@@ -13,7 +13,7 @@ website:
         text: Cleaning
       - href: 02-BasicAnalysis.qmd
         text: Statewide Analysis
-      - href: 03-MoreAnalysis.qmd
+      - href: 03-ReacTable.qmd
         text: Interactive Table
       - href: 05-ShinyDataTable.qmd
         text: Shiny Interactive Table

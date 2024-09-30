@@ -1,0 +1,41 @@
+---
+title: "Interactive Data Table using Reactable"
+---
+
+## Setup
+
+```{r}
+library(reactable)
+library(tidyverse)
+```
+
+## Read in the data 
+
+I am using the data from O2-BasicAnalysis because it has the correct columns already.
+
+```{r}
+storms <- read_rds("data-processed/02-storm-data.rds")
+```
+
+
+## Reactable Interactive Table
+
+I wanted to create an interative data table that I could search and filter for records. To do this with reactable, I made the table "searchable" to add the top search bar. Then I made event type, location and county/zone filterable. I also made each damage column able to be arranges in desc or asc order with the defaultSortOrder. I did the same with the date column. 
+
+```{r}
+reactable(
+    storms, 
+    searchable = TRUE,
+    columns = list(
+    event_type = colDef(name = "Event Type", filterable = TRUE),
+    location = colDef(name = "Location", filterable = TRUE),
+    CZ_type = colDef(name = "County/Zone"),
+    FIPS = colDef(name = "FIPS Code", filterable = TRUE),
+    total_damages = colDef(name = "Total Damages", align = "center", defaultSortOrder = "desc"),
+    damage_val_prop = colDef(align = "center", name = "Damages to Property", defaultSortOrder = "desc"),
+    damage_val_crop = colDef(align = "center", name = "Damages to Crops", defaultSortOrder = "desc"),
+    begin_date = colDef(name = "Start Date", defaultSortOrder = "asc")
+    )
+  )
+```
+

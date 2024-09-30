@@ -4,6 +4,8 @@ title: "Statewide Analysis"
 
 ## Setup
 
+Importing the libraries I will need. 
+
 ```{r setup}
 library(tidyverse)
 library(janitor)
@@ -49,7 +51,7 @@ storms
 
 ```
 
-I am going to export this version of this data.
+I am going to export this version of this data for further analysis later. 
 
 ```{r}
 storms |> write_rds("data-processed/02-storm-data.rds")
@@ -60,6 +62,8 @@ storms |> write_rds("data-processed/02-storm-data.rds")
 # Answering Statewide Questions
 
 ## What do damages from storms look like over time?
+
+I am going to group by years and then sum up the total damages for each year. Then I arrange it so the years with the highest total damage are at the top. 
 
 ```{r}
 yr_damages <- storms |> group_by(yr = year(begin_date)) |> 
@@ -82,6 +86,7 @@ ggplot(
 
 ## Which storm types cause the most damage?
 
+To answer this question, I am grouping by the storm event types (hurricane, tornado, etc.) and then summing up the total damage for each storm event type. Then I arrange the table to show the event types with the highest total damages at the top. 
 
 ```{r}
 #now groupby event type and sum up damages
@@ -92,14 +97,18 @@ most_damage <- storms |> group_by(event_type) |>
 most_damage
 ```
 
+Now, I want to graph each event type over time to see if there are any obvious trends. Here, I am grouping by the event_type and year and then summing up damages for each event type for each year and then looking at only the years/events that had damages. 
+
 ```{r}
 most_damage_time <- storms |> group_by(event_type, yr = year(begin_date)) |> 
   summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
-  arrange(yr |> desc()) |> 
+  arrange(total_damages |> desc()) |> 
   filter(total_damages > 0)
 
 most_damage_time
 ```
+
+Now I am plotting it. 
 
 ```{r}
 ggplot (
@@ -108,7 +117,9 @@ ggplot (
 ) + geom_line()
 ```
 
-## Most Damaging Storms 
+## Which individual storms caused the most damage?
+
+Here are the top ten storms according to total damage. 
 
 ```{r}
 sorted_damages <- storms |> arrange(total_damages |> desc())
@@ -119,6 +130,8 @@ sorted_damages |> head(10)
 
 
 # Answering the same questions but for damage to property and then crops
+
+In this section, I answer the saem questions as above, in the same way, but I do it for damages to crops and damages to property, separately instead of total damages. 
 
 ## What do damages to property from storms look like over time?
 
@@ -153,6 +166,8 @@ most_damage_prop <- storms |> group_by(event_type) |>
 most_damage_prop
 ```
 
+## How have damages to property from different storm types varied over time?
+
 ```{r}
 most_damage_time_prop <- storms |> group_by(event_type, yr = year(begin_date)) |> 
   summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |> 
@@ -169,7 +184,7 @@ ggplot (
 ) + geom_line()
 ```
 
-## Most Damaging Storms to property
+## Which specific storms cause the most damage to property?
 
 ```{r}
 sorted_damages_prop <- storms |> arrange(damage_val_prop |> desc())
@@ -210,6 +225,8 @@ most_damage_crop <- storms |> group_by(event_type) |>
 most_damage_crop
 ```
 
+## How have damages to crops from different storm types varied over time?
+
 ```{r}
 most_damage_time_crop <- storms |> group_by(event_type, yr = year(begin_date)) |> 
   summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |> 
@@ -226,7 +243,7 @@ ggplot (
 ) + geom_line()
 ```
 
-## Most Damaging Storms to crops
+## Which specific storms cause the most damage to crops?
 
 ```{r}
 sorted_damages_crop <- storms |> arrange(damage_val_crop |> desc())

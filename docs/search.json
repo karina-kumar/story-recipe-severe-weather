@@ -7,102 +7,25 @@
     "text": "library(shiny)\n\nWarning: package 'shiny' was built under R version 4.3.3\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(tigris)\n\nWarning: package 'tigris' was built under R version 4.3.1\n\n\nTo enable caching of data, set `options(tigris_use_cache = TRUE)`\nin your R script or .Rprofile.\n\n\n\ntexas_counties &lt;- list_counties(\"texas\")\ntx_counties &lt;- texas_counties |&gt; select(county) |&gt; mutate(county = toupper(county))\n\ntx_counties |&gt; head()\n\n\n\n  \n\n\n\n\nstorms &lt;- readRDS(\"data-processed/02-storm-data.rds\")\n\nstorms |&gt; head()\n\n\n\n  \n\n\n\n\n#Define UI ----\nui &lt;- fluidPage(\n    \n    # Copy the line below to make a select box \n    selectInput(\"select\", label = h3(\"Select box\"), \n                choices = tx_counties, \n                multiple = TRUE),\n    \n    dataTableOutput(outputId = \"stormtable\")\n  )\n\n`shiny::dataTableOutput()` is deprecated as of shiny 1.8.1.\nPlease use `DT::DTOutput()` instead.\nSince you have a suitable version of DT (&gt;= v0.32.1), shiny::dataTableOutput() will automatically use DT::DTOutput() under-the-hood.\nIf this happens to break your app, set `options(shiny.legacy.datatable = TRUE)` to get the legacy datatable implementation (or `FALSE` to squelch this message).\nSee &lt;https://rstudio.github.io/DT/shiny.html&gt; for more information.\n\n# Define server logic ----\nserver &lt;- function(input, output) {\n  output$stormtable &lt;- DT::renderDataTable({\n    if (is.null(input$select) || length(input$select) == 0) {\n      # No selection made, return the full dataset\n      filtered_data &lt;- storms\n    } else {\n      # Filter the dataset based on selections\n      filtered_data &lt;- storms %&gt;%\n        filter(location %in% input$select)\n    }\n    \n    # Return the datatable\n    DT::datatable(filtered_data)\n  })\n}\n\n# Run the app ----\nshinyApp(ui = ui, server = server)"
   },
   {
-    "objectID": "03-MoreAnalysis.html",
-    "href": "03-MoreAnalysis.html",
-    "title": "Story Recipe: Severe Weather Damage in Texas",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\n\nstorms &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\n\ndamages &lt;- storms |&gt; select(\n  EVENT_TYPE,\n  CZ_NAME,\n  CZ_TYPE,\n  CZ_FIPS,\n  damage_val_prop,\n  damage_val_crop, \n  begin_date\n  \n  \n)\n\ndamages |&gt; glimpse()\n\nRows: 104,554\nColumns: 7\n$ EVENT_TYPE      &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Winte…\n$ CZ_NAME         &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\", …\n$ CZ_TYPE         &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\",…\n$ CZ_FIPS         &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, 12…\n$ damage_val_prop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ damage_val_crop &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ begin_date      &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 2000-…\n\n\n\nreactable(\n    damages, \n    searchable = TRUE,\n    columns = list(\n    EVENT_TYPE = colDef(name = \"Event Type\", filterable = TRUE),\n    CZ_NAME = colDef(name = \"Location\", filterable = TRUE),\n    CZ_TYPE = colDef(name = \"County/Zone\"),\n    CZ_FIPS = colDef(name = \"FIPS Code\", filterable = TRUE),\n    damage_val_prop = colDef(align = \"center\", name = \"Damages to Property\", defaultSortOrder = \"desc\"),\n    damage_val_crop = colDef(align = \"center\", name = \"Damages to Crops\", defaultSortOrder = \"desc\"),\n    begin_date = colDef(name = \"Start Date\", defaultSortOrder = \"asc\")\n    )\n  )"
+    "text": "Statewide Questions\n\nWhat do damages from storms look like over time?\nWhich storm types cause the most damage?\nWhich specific storms caused the most damage?\n\nProperty\n\nWhat do damages to property from storms look like over time?\nWhich storm types cause the most damage to property?\nHow have damages to property from different storm types varied over time?\nWhich specific storms cause the most damage to property?\n\nCrops\n\nWhat do damages from storms look like over time for crops?\nWhich storm types cause the most damage to crops?\nHow have damages to crops from different storm types varied over time?\nWhich specific storms cause the most damage to crops?"
   },
   {
-    "objectID": "02-BasicAnalysis.html",
-    "href": "02-BasicAnalysis.html",
-    "title": "Statewide Analysis",
+    "objectID": "about.html#project-questions",
+    "href": "about.html#project-questions",
+    "title": "About",
     "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
+    "text": "Statewide Questions\n\nWhat do damages from storms look like over time?\nWhich storm types cause the most damage?\nWhich specific storms caused the most damage?\n\nProperty\n\nWhat do damages to property from storms look like over time?\nWhich storm types cause the most damage to property?\nHow have damages to property from different storm types varied over time?\nWhich specific storms cause the most damage to property?\n\nCrops\n\nWhat do damages from storms look like over time for crops?\nWhich storm types cause the most damage to crops?\nHow have damages to crops from different storm types varied over time?\nWhich specific storms cause the most damage to crops?"
   },
   {
-    "objectID": "02-BasicAnalysis.html#setup",
-    "href": "02-BasicAnalysis.html#setup",
-    "title": "Statewide Analysis",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Severe Weather and Damage Trends in Texas",
     "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#read-in-clean-data",
-    "href": "02-BasicAnalysis.html#read-in-clean-data",
-    "title": "Statewide Analysis",
-    "section": "Read in Clean Data",
-    "text": "Read in Clean Data\n\ndf &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\ndf |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
-    "href": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
-    "title": "Statewide Analysis",
-    "section": "Clean up data more for analysis",
-    "text": "Clean up data more for analysis\nI am going to remove the unnecessary columns for this analysis and change the order of the columns. I am also going to create a new column that is total damages (damage_val_prop + damage_val_crop).\n\nstorms &lt;- df |&gt; mutate(\n  event_type = EVENT_TYPE,\n  location = CZ_NAME,\n  FIPS = CZ_FIPS,\n  CZ_type = CZ_TYPE\n\n)\n\nstorms &lt;- storms |&gt; rowwise() |&gt; mutate(\n  total_damages = sum(damage_val_prop, damage_val_crop, na.rm = TRUE)\n) |&gt; select(\n  event_type,\n  location,\n  CZ_type,\n  FIPS,\n  total_damages,\n  damage_val_prop,\n  damage_val_crop,\n  begin_date\n)\n\nstorms\n\n\n\n  \n\n\n\nI am going to export this version of this data.\n\nstorms |&gt; write_rds(\"data-processed/02-storm-data.rds\")"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
-    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
-    "title": "Statewide Analysis",
-    "section": "What do damages from storms look like over time?",
-    "text": "What do damages from storms look like over time?\n\nyr_damages &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nyr_damages\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages,\n  aes(x = yr, y =total_damages)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
-    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
-    "title": "Statewide Analysis",
-    "section": "Which storm types cause the most damage?",
-    "text": "Which storm types cause the most damage?\n\n#now groupby event type and sum up damages\nmost_damage &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\n\nmost_damage_time &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time,\n  aes(x = yr, y = total_damages, color = event_type)\n) + geom_line()"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#most-damaging-storms",
-    "href": "02-BasicAnalysis.html#most-damaging-storms",
-    "title": "Statewide Analysis",
-    "section": "Most Damaging Storms",
-    "text": "Most Damaging Storms\n\nsorted_damages &lt;- storms |&gt; arrange(total_damages |&gt; desc())\nsorted_damages |&gt; head(10)"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
-    "href": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
-    "title": "Statewide Analysis",
-    "section": "What do damages to property from storms look like over time?",
-    "text": "What do damages to property from storms look like over time?\n\nyr_damages_prop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nyr_damages_prop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_prop,\n  aes(x = yr, y =total_damages_prop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
-    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
-    "title": "Statewide Analysis",
-    "section": "Which storm types cause the most damage to property?",
-    "text": "Which storm types cause the most damage to property?\n\n#now groupby event type and sum up damages\nmost_damage_prop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nmost_damage_prop\n\n\n\n  \n\n\n\n\nmost_damage_time_prop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_prop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_prop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_prop,\n  aes(x = yr, y = total_damages_prop, color = event_type)\n) + geom_line()"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#most-damaging-storms-to-property",
-    "href": "02-BasicAnalysis.html#most-damaging-storms-to-property",
-    "title": "Statewide Analysis",
-    "section": "Most Damaging Storms to property",
-    "text": "Most Damaging Storms to property\n\nsorted_damages_prop &lt;- storms |&gt; arrange(damage_val_prop |&gt; desc())\nsorted_damages_prop |&gt; head(10)"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
-    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
-    "title": "Statewide Analysis",
-    "section": "What do damages from storms look like over time for crops?",
-    "text": "What do damages from storms look like over time for crops?\n\nyr_damages_crop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nyr_damages_crop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_crop,\n  aes(x = yr, y =total_damages_crop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
-    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
-    "title": "Statewide Analysis",
-    "section": "Which storm types cause the most damage to crops?",
-    "text": "Which storm types cause the most damage to crops?\n\n#now groupby event type and sum up damages\nmost_damage_crop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nmost_damage_crop\n\n\n\n  \n\n\n\n\nmost_damage_time_crop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_crop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_crop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_crop,\n  aes(x = yr, y = total_damages_crop, color = event_type)\n) + geom_line()"
-  },
-  {
-    "objectID": "02-BasicAnalysis.html#most-damaging-storms-to-crops",
-    "href": "02-BasicAnalysis.html#most-damaging-storms-to-crops",
-    "title": "Statewide Analysis",
-    "section": "Most Damaging Storms to crops",
-    "text": "Most Damaging Storms to crops\n\nsorted_damages_crop &lt;- storms |&gt; arrange(damage_val_crop |&gt; desc())\nsorted_damages_crop |&gt; head(10)"
+    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
   },
   {
     "objectID": "04-AnalysisTemplate.html",
@@ -147,66 +70,185 @@
     "text": "Most Damaging Storms\n\nsorted_damages &lt;- storms |&gt; arrange(total_damages |&gt; desc())\nsorted_damages |&gt; head(10)"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Severe Weather and Damage Trends in Texas",
+    "objectID": "03-ReacTable.html",
+    "href": "03-ReacTable.html",
+    "title": "Interactive Data Table using Reactable",
     "section": "",
-    "text": "This is an example of a story recipe project. In this project I will explore the Storm Events Database from the NOAA. I want to analyze how severe weather and its damages vary across different parts of the Texas."
+    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "02-BasicAnalysis.html",
+    "href": "02-BasicAnalysis.html",
+    "title": "Statewide Analysis",
     "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+    "text": "Importing the libraries I will need.\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
   },
   {
-    "objectID": "about.html#project-questions",
-    "href": "about.html#project-questions",
-    "title": "About",
+    "objectID": "02-BasicAnalysis.html#setup",
+    "href": "02-BasicAnalysis.html#setup",
+    "title": "Statewide Analysis",
     "section": "",
-    "text": "Statewide Questions - Which storm types cause the most damage? - Where are the most damaging storms? - What year had the most damages? - How have the damages from storm events changed over time? - What sort of damages from what kinds of severe weather does East Texas deal with vs. West Texas vs. the Panhandle?"
+    "text": "Importing the libraries I will need.\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nlibrary(lubridate)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#read-in-clean-data",
+    "href": "02-BasicAnalysis.html#read-in-clean-data",
+    "title": "Statewide Analysis",
+    "section": "Read in Clean Data",
+    "text": "Read in Clean Data\n\ndf &lt;- read_rds(\"data-processed/01-storm-data.rds\")\n\ndf |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
+    "href": "02-BasicAnalysis.html#clean-up-data-more-for-analysis",
+    "title": "Statewide Analysis",
+    "section": "Clean up data more for analysis",
+    "text": "Clean up data more for analysis\nI am going to remove the unnecessary columns for this analysis and change the order of the columns. I am also going to create a new column that is total damages (damage_val_prop + damage_val_crop).\n\nstorms &lt;- df |&gt; mutate(\n  event_type = EVENT_TYPE,\n  location = CZ_NAME,\n  FIPS = CZ_FIPS,\n  CZ_type = CZ_TYPE\n\n)\n\nstorms &lt;- storms |&gt; rowwise() |&gt; mutate(\n  total_damages = sum(damage_val_prop, damage_val_crop, na.rm = TRUE)\n) |&gt; select(\n  event_type,\n  location,\n  CZ_type,\n  FIPS,\n  total_damages,\n  damage_val_prop,\n  damage_val_crop,\n  begin_date\n)\n\nstorms\n\n\n\n  \n\n\n\nI am going to export this version of this data for further analysis later.\n\nstorms |&gt; write_rds(\"data-processed/02-storm-data.rds\")"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
+    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time",
+    "title": "Statewide Analysis",
+    "section": "What do damages from storms look like over time?",
+    "text": "What do damages from storms look like over time?\nI am going to group by years and then sum up the total damages for each year. Then I arrange it so the years with the highest total damage are at the top.\n\nyr_damages &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nyr_damages\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages,\n  aes(x = yr, y =total_damages)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage?",
+    "text": "Which storm types cause the most damage?\nTo answer this question, I am grouping by the storm event types (hurricane, tornado, etc.) and then summing up the total damage for each storm event type. Then I arrange the table to show the event types with the highest total damages at the top.\n\n#now groupby event type and sum up damages\nmost_damage &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc())\n\nmost_damage\n\n\n\n  \n\n\n\nNow, I want to graph each event type over time to see if there are any obvious trends. Here, I am grouping by the event_type and year and then summing up damages for each event type for each year and then looking at only the years/events that had damages.\n\nmost_damage_time &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |&gt; \n  arrange(total_damages |&gt; desc()) |&gt; \n  filter(total_damages &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time\n\n\n\n  \n\n\n\nNow I am plotting it.\n\nggplot (\n  most_damage_time,\n  aes(x = yr, y = total_damages, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-individual-storms-caused-the-most-damage",
+    "href": "02-BasicAnalysis.html#which-individual-storms-caused-the-most-damage",
+    "title": "Statewide Analysis",
+    "section": "Which individual storms caused the most damage?",
+    "text": "Which individual storms caused the most damage?\nHere are the top ten storms according to total damage.\n\nsorted_damages &lt;- storms |&gt; arrange(total_damages |&gt; desc())\nsorted_damages |&gt; head(10)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
+    "href": "02-BasicAnalysis.html#what-do-damages-to-property-from-storms-look-like-over-time",
+    "title": "Statewide Analysis",
+    "section": "What do damages to property from storms look like over time?",
+    "text": "What do damages to property from storms look like over time?\n\nyr_damages_prop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nyr_damages_prop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_prop,\n  aes(x = yr, y =total_damages_prop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-property",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage to property?",
+    "text": "Which storm types cause the most damage to property?\n\n#now groupby event type and sum up damages\nmost_damage_prop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_prop |&gt; desc())\n\nmost_damage_prop"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#how-have-damages-to-property-from-different-storm-types-varied-over-time",
+    "href": "02-BasicAnalysis.html#how-have-damages-to-property-from-different-storm-types-varied-over-time",
+    "title": "Statewide Analysis",
+    "section": "How have damages to property from different storm types varied over time?",
+    "text": "How have damages to property from different storm types varied over time?\n\nmost_damage_time_prop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_prop = sum(damage_val_prop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_prop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_prop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_prop,\n  aes(x = yr, y = total_damages_prop, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-specific-storms-cause-the-most-damage-to-property",
+    "href": "02-BasicAnalysis.html#which-specific-storms-cause-the-most-damage-to-property",
+    "title": "Statewide Analysis",
+    "section": "Which specific storms cause the most damage to property?",
+    "text": "Which specific storms cause the most damage to property?\n\nsorted_damages_prop &lt;- storms |&gt; arrange(damage_val_prop |&gt; desc())\nsorted_damages_prop |&gt; head(10)"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
+    "href": "02-BasicAnalysis.html#what-do-damages-from-storms-look-like-over-time-for-crops",
+    "title": "Statewide Analysis",
+    "section": "What do damages from storms look like over time for crops?",
+    "text": "What do damages from storms look like over time for crops?\n\nyr_damages_crop &lt;- storms |&gt; group_by(yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nyr_damages_crop\n\n\n\n  \n\n\n\nNow let’s plot it.\n\nggplot(\n  yr_damages_crop,\n  aes(x = yr, y =total_damages_crop)\n) + geom_col() +\n  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +\n   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
+    "href": "02-BasicAnalysis.html#which-storm-types-cause-the-most-damage-to-crops",
+    "title": "Statewide Analysis",
+    "section": "Which storm types cause the most damage to crops?",
+    "text": "Which storm types cause the most damage to crops?\n\n#now groupby event type and sum up damages\nmost_damage_crop &lt;- storms |&gt; group_by(event_type) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(total_damages_crop |&gt; desc())\n\nmost_damage_crop"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#how-have-damages-to-crops-from-different-storm-types-varied-over-time",
+    "href": "02-BasicAnalysis.html#how-have-damages-to-crops-from-different-storm-types-varied-over-time",
+    "title": "Statewide Analysis",
+    "section": "How have damages to crops from different storm types varied over time?",
+    "text": "How have damages to crops from different storm types varied over time?\n\nmost_damage_time_crop &lt;- storms |&gt; group_by(event_type, yr = year(begin_date)) |&gt; \n  summarize(total_damages_crop = sum(damage_val_crop, na.rm = TRUE)) |&gt; \n  arrange(yr |&gt; desc()) |&gt; \n  filter(total_damages_crop &gt; 0)\n\n`summarise()` has grouped output by 'event_type'. You can override using the\n`.groups` argument.\n\nmost_damage_time_crop\n\n\n\n  \n\n\n\n\nggplot (\n  most_damage_time_crop,\n  aes(x = yr, y = total_damages_crop, color = event_type)\n) + geom_line()"
+  },
+  {
+    "objectID": "02-BasicAnalysis.html#which-specific-storms-cause-the-most-damage-to-crops",
+    "href": "02-BasicAnalysis.html#which-specific-storms-cause-the-most-damage-to-crops",
+    "title": "Statewide Analysis",
+    "section": "Which specific storms cause the most damage to crops?",
+    "text": "Which specific storms cause the most damage to crops?\n\nsorted_damages_crop &lt;- storms |&gt; arrange(damage_val_crop |&gt; desc())\nsorted_damages_crop |&gt; head(10)"
   },
   {
     "objectID": "01-Cleaning.html",
     "href": "01-Cleaning.html",
     "title": "01-Cleaning",
     "section": "",
-    "text": "Import Libraries:\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(lubridate)\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test"
+    "text": "Importing the libraries I might or will definitely need.\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(lubridate)\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test"
   },
   {
     "objectID": "01-Cleaning.html#narrow-results",
     "href": "01-Cleaning.html#narrow-results",
     "title": "01-Cleaning",
     "section": "Narrow Results",
-    "text": "Narrow Results\nI am only interested in storms in Texas for now. So let’s filter for Texas\n\ntexas &lt;- df |&gt; filter( STATE == \"TEXAS\")\n\ntexas |&gt; glimpse()\n\nRows: 104,554\nColumns: 51\n$ BEGIN_YEARMONTH    &lt;dbl&gt; 200001, 200001, 200001, 200001, 200001, 200001, 200…\n$ BEGIN_DAY          &lt;dbl&gt; 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,…\n$ BEGIN_TIME         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, …\n$ END_YEARMONTH      &lt;dbl&gt; 200001, 200001, 200001, 200001, 200001, 200001, 200…\n$ END_DAY            &lt;dbl&gt; 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,…\n$ END_TIME           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2300, …\n$ EPISODE_ID         &lt;dbl&gt; 1090451, 1090451, 1090451, 1090451, 1090451, 109045…\n$ EVENT_ID           &lt;dbl&gt; 5129018, 5129030, 5129031, 5129032, 5129005, 512902…\n$ STATE              &lt;chr&gt; \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS…\n$ STATE_FIPS         &lt;dbl&gt; 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48,…\n$ YEAR               &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 200…\n$ MONTH_NAME         &lt;chr&gt; \"January\", \"January\", \"January\", \"January\", \"Januar…\n$ EVENT_TYPE         &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Wi…\n$ CZ_TYPE            &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"…\n$ CZ_FIPS            &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103,…\n$ CZ_NAME            &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE…\n$ WFO                &lt;chr&gt; \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"F…\n$ BEGIN_DATE_TIME    &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN…\n$ CZ_TIMEZONE        &lt;chr&gt; \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"C…\n$ END_DATE_TIME      &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN…\n$ INJURIES_DIRECT    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ INJURIES_INDIRECT  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DEATHS_DIRECT      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DEATHS_INDIRECT    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DAMAGE_PROPERTY    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ DAMAGE_CROPS       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ SOURCE             &lt;chr&gt; \"NEWSPAPER\", \"NEWSPAPER\", \"NEWSPAPER\", \"NEWSPAPER\",…\n$ MAGNITUDE          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ MAGNITUDE_TYPE     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ FLOOD_CAUSE        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ CATEGORY           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_F_SCALE        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_LENGTH         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_WIDTH          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_WFO      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_STATE &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_FIPS  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_NAME  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_RANGE        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_AZIMUTH      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LOCATION     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_RANGE          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_AZIMUTH        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LOCATION       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LAT          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LON          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LAT            &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LON            &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ EPISODE_NARRATIVE  &lt;chr&gt; \"An arctic cold front moved through North Texas on …\n$ EVENT_NARRATIVE    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ DATA_SOURCE        &lt;chr&gt; \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"P…"
+    "text": "Narrow Results\nI am only interested in storms in Texas for now. So I’m going to filter for Texas.\n\ntexas &lt;- df |&gt; filter( STATE == \"TEXAS\")\n\ntexas |&gt; glimpse()\n\nRows: 104,554\nColumns: 51\n$ BEGIN_YEARMONTH    &lt;dbl&gt; 200001, 200001, 200001, 200001, 200001, 200001, 200…\n$ BEGIN_DAY          &lt;dbl&gt; 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,…\n$ BEGIN_TIME         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, …\n$ END_YEARMONTH      &lt;dbl&gt; 200001, 200001, 200001, 200001, 200001, 200001, 200…\n$ END_DAY            &lt;dbl&gt; 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,…\n$ END_TIME           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2300, …\n$ EPISODE_ID         &lt;dbl&gt; 1090451, 1090451, 1090451, 1090451, 1090451, 109045…\n$ EVENT_ID           &lt;dbl&gt; 5129018, 5129030, 5129031, 5129032, 5129005, 512902…\n$ STATE              &lt;chr&gt; \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS\", \"TEXAS…\n$ STATE_FIPS         &lt;dbl&gt; 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48,…\n$ YEAR               &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 200…\n$ MONTH_NAME         &lt;chr&gt; \"January\", \"January\", \"January\", \"January\", \"Januar…\n$ EVENT_TYPE         &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Wi…\n$ CZ_TYPE            &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"…\n$ CZ_FIPS            &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103,…\n$ CZ_NAME            &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE…\n$ WFO                &lt;chr&gt; \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"FWD\", \"F…\n$ BEGIN_DATE_TIME    &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN…\n$ CZ_TIMEZONE        &lt;chr&gt; \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"CST\", \"C…\n$ END_DATE_TIME      &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN…\n$ INJURIES_DIRECT    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ INJURIES_INDIRECT  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DEATHS_DIRECT      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DEATHS_INDIRECT    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …\n$ DAMAGE_PROPERTY    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ DAMAGE_CROPS       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ SOURCE             &lt;chr&gt; \"NEWSPAPER\", \"NEWSPAPER\", \"NEWSPAPER\", \"NEWSPAPER\",…\n$ MAGNITUDE          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ MAGNITUDE_TYPE     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ FLOOD_CAUSE        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ CATEGORY           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_F_SCALE        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_LENGTH         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_WIDTH          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_WFO      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_STATE &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_FIPS  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ TOR_OTHER_CZ_NAME  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_RANGE        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_AZIMUTH      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LOCATION     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_RANGE          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_AZIMUTH        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LOCATION       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LAT          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ BEGIN_LON          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LAT            &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ END_LON            &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ EPISODE_NARRATIVE  &lt;chr&gt; \"An arctic cold front moved through North Texas on …\n$ EVENT_NARRATIVE    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ DATA_SOURCE        &lt;chr&gt; \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"PDC\", \"P…"
   },
   {
     "objectID": "01-Cleaning.html#select-columns",
     "href": "01-Cleaning.html#select-columns",
     "title": "01-Cleaning",
     "section": "Select Columns",
-    "text": "Select Columns\nI am going to select the columns I want to work with.\n\nstorms &lt;- texas |&gt; select(\n  EVENT_TYPE,\n  BEGIN_DATE_TIME,\n  END_DATE_TIME,\n  YEAR,\n  INJURIES_DIRECT,\n  INJURIES_INDIRECT,\n  DEATHS_DIRECT,\n  DEATHS_INDIRECT,\n  DAMAGE_PROPERTY,\n  DAMAGE_CROPS,\n  CZ_TYPE,\n  CZ_FIPS,\n  CZ_NAME\n  )\n\nstorms |&gt; glimpse()\n\nRows: 104,554\nColumns: 13\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ BEGIN_DATE_TIME   &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN-…\n$ END_DATE_TIME     &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN-…\n$ YEAR              &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DAMAGE_PROPERTY   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ DAMAGE_CROPS      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…"
+    "text": "Select Columns\nI am going to select the columns I think I want to work with.\n\nstorms &lt;- texas |&gt; select(\n  EVENT_TYPE,\n  BEGIN_DATE_TIME,\n  END_DATE_TIME,\n  YEAR,\n  INJURIES_DIRECT,\n  INJURIES_INDIRECT,\n  DEATHS_DIRECT,\n  DEATHS_INDIRECT,\n  DAMAGE_PROPERTY,\n  DAMAGE_CROPS,\n  CZ_TYPE,\n  CZ_FIPS,\n  CZ_NAME\n  )\n\nstorms |&gt; glimpse()\n\nRows: 104,554\nColumns: 13\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ BEGIN_DATE_TIME   &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN-…\n$ END_DATE_TIME     &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN-…\n$ YEAR              &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DAMAGE_PROPERTY   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ DAMAGE_CROPS      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…"
   },
   {
     "objectID": "01-Cleaning.html#change-types-for-some-columns",
     "href": "01-Cleaning.html#change-types-for-some-columns",
     "title": "01-Cleaning",
     "section": "Change types for some columns",
-    "text": "Change types for some columns\nFirst, I am making the damage columns become numbers I can compare. First, I am separating the unit (k,m,b) from the number.\n\nseparate_col_damage &lt;- storms |&gt; mutate(\n  number1 = str_sub(DAMAGE_PROPERTY, end = -2),\n  unit1 = str_sub(DAMAGE_PROPERTY, -1:-1),\n  number2 = str_sub(DAMAGE_CROPS, end = -2),\n  unit2 = str_sub(DAMAGE_CROPS, -1:-1)\n)\n\nseparate_col_damage\n\n\n\n  \n\n\n\nNext, I am making the number columns numerals.\n\ndamage_col_num &lt;- separate_col_damage |&gt; mutate(\n  number1 = as.numeric(number1),\n  number2 = as.numeric(number2))\n  \ndamage_col_num\n\n\n\n  \n\n\n\nFinally, I am using the units to multiple the number col and make a damage col with the actual values.\n\ndamage_col &lt;- damage_col_num |&gt; mutate(\n  damage_val_prop = if_else(unit1 == \"K\", number1 * 1000, if_else(unit1 == \"M\", number1 * 1000000, if_else(unit1 == \"B\", number1 * 1000000000, number1 ))),\n  damage_val_crop = if_else(unit2 == \"K\", number2 * 1000, if_else(unit2 == \"M\", number2 * 1000000, if_else(unit2 == \"B\", number2 * 1000000000, number1 )))\n)\n\ndamage_col |&gt; select(\n  DAMAGE_PROPERTY,\n  damage_val_prop,\n  DAMAGE_CROPS,\n  damage_val_crop\n)\n\n\n\n  \n\n\n\nNow, I am changing the date into a date type.\n\ndate_storm &lt;- damage_col |&gt; mutate(\n  begin_date = dmy(paste(substring(BEGIN_DATE_TIME, 0, 7), YEAR, sep = '')),\n  end_date = dmy(paste(substring(END_DATE_TIME, 0, 7), YEAR, sep = '')))\n\ndate_storm |&gt; glimpse()\n\nRows: 104,554\nColumns: 21\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ BEGIN_DATE_TIME   &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN-…\n$ END_DATE_TIME     &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN-…\n$ YEAR              &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DAMAGE_PROPERTY   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ DAMAGE_CROPS      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ number1           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ unit1             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ number2           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ unit2             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
+    "text": "Change types for some columns\nThe damages columns are in a weird format with numbers and letters. I need them to be actual numbers so I can work with them. The date column is also the wrong type so I will change that too.\nFirst, I am making the damage columns become numbers I can compare, and I am separating the unit (k,m,b) from the number.\n\nseparate_col_damage &lt;- storms |&gt; mutate(\n  number1 = str_sub(DAMAGE_PROPERTY, end = -2),\n  unit1 = str_sub(DAMAGE_PROPERTY, -1:-1),\n  number2 = str_sub(DAMAGE_CROPS, end = -2),\n  unit2 = str_sub(DAMAGE_CROPS, -1:-1)\n)\n\nseparate_col_damage\n\n\n\n  \n\n\n\nNext, I am making the number columns numerals.\n\ndamage_col_num &lt;- separate_col_damage |&gt; mutate(\n  number1 = as.numeric(number1),\n  number2 = as.numeric(number2))\n  \ndamage_col_num\n\n\n\n  \n\n\n\nFinally, I am using the units to multiple the number column and make a damage columns with the actual values.\n\ndamage_col &lt;- damage_col_num |&gt; mutate(\n  damage_val_prop = if_else(unit1 == \"K\", number1 * 1000, if_else(unit1 == \"M\", number1 * 1000000, if_else(unit1 == \"B\", number1 * 1000000000, number1 ))),\n  damage_val_crop = if_else(unit2 == \"K\", number2 * 1000, if_else(unit2 == \"M\", number2 * 1000000, if_else(unit2 == \"B\", number2 * 1000000000, number1 )))\n)\n\ndamage_col |&gt; select(\n  DAMAGE_PROPERTY,\n  damage_val_prop,\n  DAMAGE_CROPS,\n  damage_val_crop\n)\n\n\n\n  \n\n\n\nNow, I am changing the date into a date type.\n\ndate_storm &lt;- damage_col |&gt; mutate(\n  begin_date = dmy(paste(substring(BEGIN_DATE_TIME, 0, 7), YEAR, sep = '')),\n  end_date = dmy(paste(substring(END_DATE_TIME, 0, 7), YEAR, sep = '')))\n\ndate_storm |&gt; glimpse()\n\nRows: 104,554\nColumns: 21\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ BEGIN_DATE_TIME   &lt;chr&gt; \"25-JAN-00 00:00:00\", \"25-JAN-00 00:00:00\", \"25-JAN-…\n$ END_DATE_TIME     &lt;chr&gt; \"28-JAN-00 00:00:00\", \"28-JAN-00 00:00:00\", \"28-JAN-…\n$ YEAR              &lt;dbl&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DAMAGE_PROPERTY   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ DAMAGE_CROPS      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ number1           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ unit1             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ number2           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ unit2             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…\n\n\nI’m also going to uppercase all the values in the county column. First, I check to see how many could be wrong. Then I change the column to all uppercase. Then I check that the change happened.\n\n#check that\ndate_storm |&gt; filter(CZ_NAME == \"Travis\")\n\n\n\n  \n\n\ncleaned_storm &lt;- date_storm |&gt; mutate(\n  CZ_NAME = str_to_upper(CZ_NAME)\n)\n\ncleaned_storm |&gt; filter(CZ_NAME == \"Travis\")"
   },
   {
     "objectID": "01-Cleaning.html#select-important-columns",
     "href": "01-Cleaning.html#select-important-columns",
     "title": "01-Cleaning",
     "section": "Select important columns",
-    "text": "Select important columns\nFinally I am going to get rid of the columns I created that I don’t need anymore.\n\nclean_storm &lt;- date_storm |&gt; select(\n  -BEGIN_DATE_TIME,\n  -END_DATE_TIME,\n  -YEAR,\n  -number1,\n  -unit1,\n  -number2,\n  -unit2,\n  -DAMAGE_PROPERTY,\n  -DAMAGE_CROPS\n) \n\nclean_storm |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
+    "text": "Select important columns\nFinally I am going to get rid of the columns I created or other columns that I don’t need anymore.\n\nclean_storm &lt;- cleaned_storm |&gt; select(\n  -BEGIN_DATE_TIME,\n  -END_DATE_TIME,\n  -YEAR,\n  -number1,\n  -unit1,\n  -number2,\n  -unit2,\n  -DAMAGE_PROPERTY,\n  -DAMAGE_CROPS\n) \n\nclean_storm |&gt; glimpse()\n\nRows: 104,554\nColumns: 12\n$ EVENT_TYPE        &lt;chr&gt; \"Winter Storm\", \"Winter Storm\", \"Winter Storm\", \"Win…\n$ INJURIES_DIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ INJURIES_INDIRECT &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_DIRECT     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ DEATHS_INDIRECT   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n$ CZ_TYPE           &lt;chr&gt; \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z\", \"Z…\n$ CZ_FIPS           &lt;dbl&gt; 98, 161, 159, 174, 92, 95, 157, 119, 106, 101, 103, …\n$ CZ_NAME           &lt;chr&gt; \"HASKELL\", \"LIMESTONE\", \"MCLENNAN\", \"MILAM\", \"COOKE\"…\n$ damage_val_prop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ damage_val_crop   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ begin_date        &lt;date&gt; 2000-01-25, 2000-01-25, 2000-01-25, 2000-01-25, 200…\n$ end_date          &lt;date&gt; 2000-01-28, 2000-01-28, 2000-01-28, 2000-01-28, 200…"
   },
   {
     "objectID": "01-Cleaning.html#export",
     "href": "01-Cleaning.html#export",
     "title": "01-Cleaning",
     "section": "Export",
-    "text": "Export\n\nclean_storm |&gt; write_rds(\"data-processed/01-storm-data.rds\")\n\n```"
+    "text": "Export\nExporting the file as an rds so I can do an analysis.\n\nclean_storm |&gt; write_rds(\"data-processed/01-storm-data.rds\")\n\n```"
+  },
+  {
+    "objectID": "03-ReacTable.html#setup",
+    "href": "03-ReacTable.html#setup",
+    "title": "Interactive Data Table using Reactable",
+    "section": "",
+    "text": "library(reactable)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.3     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors"
+  },
+  {
+    "objectID": "03-ReacTable.html#read-in-the-data-from-02-analysis",
+    "href": "03-ReacTable.html#read-in-the-data-from-02-analysis",
+    "title": "Interactive Data Table using Reactable",
+    "section": "Read in the data from 02-analysis",
+    "text": "Read in the data from 02-analysis\n\nstorms &lt;- read_rds(\"data-processed/02-storm-data.rds\")"
+  },
+  {
+    "objectID": "03-ReacTable.html#reactable-interactive-table",
+    "href": "03-ReacTable.html#reactable-interactive-table",
+    "title": "Interactive Data Table using Reactable",
+    "section": "Reactable Interactive Table",
+    "text": "Reactable Interactive Table\nI wanted to create an interative data table that I could search and filter for records. To do this with reactable, I made the table “searchable” to add the top search bar. Then I made event type, location and county/zone filterable. I also made each damage column able to be arranges in desc or asc order with the defaultSortOrder. I did the same with the date column.\n\nreactable(\n    storms, \n    searchable = TRUE,\n    columns = list(\n    event_type = colDef(name = \"Event Type\", filterable = TRUE),\n    location = colDef(name = \"Location\", filterable = TRUE),\n    CZ_type = colDef(name = \"County/Zone\"),\n    FIPS = colDef(name = \"FIPS Code\", filterable = TRUE),\n    total_damages = colDef(name = \"Total Damages\", align = \"center\", defaultSortOrder = \"desc\"),\n    damage_val_prop = colDef(align = \"center\", name = \"Damages to Property\", defaultSortOrder = \"desc\"),\n    damage_val_crop = colDef(align = \"center\", name = \"Damages to Crops\", defaultSortOrder = \"desc\"),\n    begin_date = colDef(name = \"Start Date\", defaultSortOrder = \"asc\")\n    )\n  )"
+  },
+  {
+    "objectID": "03-ReacTable.html#read-in-the-data",
+    "href": "03-ReacTable.html#read-in-the-data",
+    "title": "Interactive Data Table using Reactable",
+    "section": "Read in the data",
+    "text": "Read in the data\nI am using the data from O2-BasicAnalysis because it has the correct columns already.\n\nstorms &lt;- read_rds(\"data-processed/02-storm-data.rds\")"
   }
 ]
