@@ -18,13 +18,29 @@ library(tidyverse)
 storms <- read_rds("data-processed/02-storm-data.rds")
 ```
 
-
-# Answering Questions
-
-## What do damages from storms look like over time?
+## Create a list of specific counties
+This is where the parameterization might change
 
 ```{r}
-yr_damages <- storms |> group_by(yr = year(begin_date)) |> 
+counties <- list("HARDIN", "GALVESTON", "CHAMBERS", "LIBERTY", "HARRIS", "JEFFERSON", "ORANGE")
+```
+
+## Filtering for specific counties
+
+```{r}
+df <- storms |> filter(location %in% counties)
+
+df |> head(20)
+```
+
+# Answering Questions
+Now that it's filtered for the correct region, I will answer the same questions I did in the statewide analysis for this region, as well as a few more. 
+
+## What do damages from storms look like over time?
+I am going to group by years and then sum up the total damages for each year. Then I arrange it so the years with the highest total damage are at the top. 
+
+```{r}
+yr_damages <- df |> group_by(yr = year(begin_date)) |> 
   summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
   arrange(total_damages |> desc())
 
@@ -42,26 +58,54 @@ ggplot(
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))
 ```
 
+## Damages over time broken down by county
+Same as above, but a stacked bar chart broken down by each county in this region.
+First, I need to also group by the location along with year. 
+
+```{r}
+county_damages <- df |> group_by(yr = year(begin_date), location) |> 
+  summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
+  arrange(total_damages |> desc())
+
+county_damages
+```
+
+Now I can plot it. 
+
+```{r}
+ggplot(
+  county_damages,
+  aes(fill = location, x = yr, y =total_damages)
+) + geom_col(position = "stack") +
+  scale_x_continuous(breaks = seq(2000, 2023, by = 1)) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.5))
+```
+
 ## Which storm types cause the most damage?
 
+To answer this question, I am grouping by the storm event types (hurricane, tornado, etc.) and then summing up the total damage for each storm event type. Then I arrange the table to show the event types with the highest total damages at the top. 
 
-```{r most-damage}
+```{r}
 #now groupby event type and sum up damages
-most_damage <- storms |> group_by(event_type) |> 
+most_damage <- df |> group_by(event_type) |> 
   summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
   arrange(total_damages |> desc())
 
 most_damage
 ```
 
+Now, I want to graph each event type over time to see if there are any obvious trends. Here, I am grouping by the event_type and year and then summing up damages for each event type for each year and then looking at only the years/events that had damages. 
+
 ```{r}
-most_damage_time <- storms |> group_by(event_type, yr = year(begin_date)) |> 
+most_damage_time <- df |> group_by(event_type, yr = year(begin_date)) |> 
   summarize(total_damages = sum(total_damages, na.rm = TRUE)) |> 
-  arrange(yr |> desc()) |> 
+  arrange(total_damages |> desc()) |> 
   filter(total_damages > 0)
 
 most_damage_time
 ```
+
+Now I am plotting it. 
 
 ```{r}
 ggplot (
@@ -70,10 +114,17 @@ ggplot (
 ) + geom_line()
 ```
 
-## Most Damaging Storms 
+## Which individual storms caused the most damage?
+
+Here are the top ten storms according to total damage. 
 
 ```{r}
-sorted_damages <- storms |> arrange(total_damages |> desc())
+sorted_damages <- df |> arrange(total_damages |> desc())
 sorted_damages |> head(10)
 
 ```
+
+## CHOROPLETH OF COUNTIES WITH TOTAL DAMAGES
+
+
+
