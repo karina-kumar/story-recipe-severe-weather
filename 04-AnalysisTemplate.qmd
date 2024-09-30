@@ -1,5 +1,7 @@
 ---
 title: "04-AnalysisTemplate"
+params: 
+  region: HARRIS
 ---
 
 This document will act as a report template for reports on a subset of counties. 
@@ -18,18 +20,17 @@ library(tidyverse)
 storms <- read_rds("data-processed/02-storm-data.rds")
 ```
 
-## Create a list of specific counties
-This is where the parameterization might change
+## Create a list of counties in this region
 
 ```{r}
-counties <- list("HARDIN", "GALVESTON", "CHAMBERS", "LIBERTY", "HARRIS", "JEFFERSON", "ORANGE")
+counties = list(params$region)
 ```
+
 
 ## Filtering for specific counties
 
 ```{r}
 df <- storms |> filter(location %in% counties)
-
 df |> head(20)
 ```
 
